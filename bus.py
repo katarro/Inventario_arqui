@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import requests
 import sys
 import servicios.servicio_signup as servicio_signup
+import servicios.servicio_catalogo as servicio_catalogo
 
 app = Flask(__name__)
 
@@ -9,6 +10,12 @@ app = Flask(__name__)
 @app.route('/signup', methods=['POST'])
 def signup():
     return servicio_signup.signup()
+
+# Crea un catalogo de juegos
+@app.route('/catalogo', methods=['POST'])
+def catalogo():
+    return servicio_catalogo.crear_catalogo()
+
 
 
 if __name__ == '__main__':
@@ -24,10 +31,16 @@ if __name__ == '__main__':
             password = sys.argv[5]
             tipoUsuario = sys.argv[6]
             data = {'nombre': nombre, 'apellido': apellido, 'email': email, 'password': password, 'tipoUsuario': tipoUsuario}
+            response = requests.post('http://localhost:5000/signup', json=data)
 
+        elif opcion == 'catalogo':
+            titulo = sys.argv[2]
+            descripcion = sys.argv[3]
+            disponibilidad = sys.argv[4]
+            data = {'titulo': titulo, 'descripcion': descripcion, 'disponibilidad': disponibilidad}
+            
 
-        # Enviar una solicitud POST al endpoint de registro de usuario
-        response = requests.post('http://localhost:5000/signup', json=data)
+            
 
         # Mostrar la respuesta del servicio
         print(response.json())
