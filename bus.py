@@ -38,6 +38,7 @@ if __name__ == '__main__':
             descripcion = sys.argv[3]
             disponibilidad = sys.argv[4]
             data = {'titulo': titulo, 'descripcion': descripcion, 'disponibilidad': disponibilidad}
+            response = requests.post('http://localhost:5000/catalogo', json=data)
             
 
             
