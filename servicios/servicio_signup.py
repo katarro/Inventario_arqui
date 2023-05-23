@@ -1,7 +1,6 @@
-from flask import Flask, request, jsonify
-import requests
+from flask import request, jsonify
+import db.conexion as Conexion
 import psycopg2
-import sys
 
 def signup():
     data = request.json
@@ -22,23 +21,17 @@ def signup():
 
     # Conectarse a la base de datos PostgreSQL
     try:
-        conn = psycopg2.connect(
-            host='bbpzwcbmdyu2wotib6og-postgresql.services.clever-cloud.com',
-            port='5432',
-            database='bbpzwcbmdyu2wotib6og',
-            user='uwnuqyetyjpariikmobj',
-            password='Is7jUIMZs9x9QLc93kd6WuHIw85Et4'
-        )
-        cursor = conn.cursor()
+        # Obtener la conexión
+        Conexion.conexion()
 
         # Insertar el usuario en la tabla de usuarios
-        cursor.execute("INSERT INTO usuarios (nombre, apellido, correo, contrasena, tipousuario) VALUES (%s, %s, %s,%s, %s)",
+        Conexion.cursor.execute("INSERT INTO usuarios (nombre, apellido, correo, contrasena, tipousuario) VALUES (%s, %s, %s,%s, %s)",
         (nombre, apellido, email, password, tipoUsuario))
-        conn.commit()
+        Conexion.conn.commit()
 
         # Cerrar la conexión
-        cursor.close()
-        conn.close()
+        Conexion.cursor.close()
+        Conexion.conn.close()
 
         # Respuesta de éxito
         response = {'message': 'Usuario registrado exitosamente'}
