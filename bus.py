@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 import requests
 import sys
-import servicio_signup
+import servicios.servicio_signup as servicio_signup
 
 app = Flask(__name__)
 
@@ -18,15 +18,12 @@ if __name__ == '__main__':
         opcion = sys.argv[1]
 
         if opcion == 'signup':
-            username = sys.argv[2]
-            password = sys.argv[3]
+            nombre = sys.argv[2]
+            apellido = sys.argv[3]
             email = sys.argv[4]
-            data = {'username': username, 'password': password, 'email': email}
-
-        elif opcion == 'login':
-            username = sys.argv[2]
-            password = sys.argv[3]
-            data = {'username': username, 'password': password}
+            password = sys.argv[5]
+            tipoUsuario = sys.argv[6]
+            data = {'nombre': nombre, 'apellido': apellido, 'email': email, 'password': password, 'tipoUsuario': tipoUsuario}
 
 
         # Enviar una solicitud POST al endpoint de registro de usuario
