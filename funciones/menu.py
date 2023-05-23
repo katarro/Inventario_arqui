@@ -1,4 +1,4 @@
-import funciones.funcion_registrar_usuario as Registrar
+import funciones.funcion_registrar_usuario as Funciones
 
 def menu():
     opcion = -1
@@ -10,4 +10,4 @@ def menu():
         print("\t3 - Salir")
         opcion = int(input("Opcion: "))
         if opcion == 1:
-            Registrar.funcion_registrar_usuario()
+            Funciones.funcion_registrar_usuario()

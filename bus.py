@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask
 import servicios.servicio_signup as Servicio
 import funciones.menu as Menu
 import sys
