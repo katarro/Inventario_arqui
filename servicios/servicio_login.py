@@ -21,8 +21,8 @@ def login():
         Conexion.conexion()
 
         # Seleccionar al usuario en la tabla de usuarios
-        Conexion.cursor.execute("SELECT * FROM usuarios WHERE CorreoElectronico=%s AND Contrasena=%s",
-        (email, password))
+        Conexion.cursor.execute("SELECT * FROM usuarios WHERE CorreoElectronico=%s",
+        (email))
         Conexion.conn.commit()
 
         results = Conexion.cursor.fetchall()
@@ -32,7 +32,7 @@ def login():
             print("El usuario ingresado no existe.")
         else:
             # Autenticacion del usuario
-            if(results[0][3] == email and results[0][4] == password):
+            if(results[0][4] == password):
                 print("Inicio de sesion exitosa.")
                 session["usuario"] = results[0]
                 #return redirect("/UserMenu")

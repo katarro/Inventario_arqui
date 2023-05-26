@@ -3,7 +3,7 @@ import funciones.funcion_inicio_sesion as InicioSesion
 
 def menu():
     opcion = -1
-    while(opcion != 3):
+    while(opcion != 4):
         print("Bienvenido al sistema de inventario")
         print("Elige una opcion: ")
         print("\t1 - Registrar usuario")
