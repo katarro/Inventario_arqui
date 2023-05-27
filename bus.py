@@ -1,5 +1,6 @@
 from flask import Flask
 import servicios.servicio_signup as Servicio
+import servicios.servicio_login as ServicioLogin
 import funciones.menu as Menu
 import sys
 
@@ -10,6 +11,9 @@ app = Flask(__name__)
 def signup():
     return Servicio.signup()
 
+@app.route('/login', methods=['GET'])
+def login():
+    return ServicioLogin.login()
 
 if __name__ == '__main__':
     # Obtener los datos de usuario como argumentos al ejecutar el script
