@@ -1,5 +1,6 @@
-import json
-from flask import request, jsonify, session
+from funciones.hashear_pass import generar_hash_sha1
+from funciones.limpiar_pantalla import limpiar_pantalla 
+from flask import jsonify, request
 import db.conexion as Conexion
 import psycopg2
 
@@ -7,45 +8,33 @@ def login():
     data = request.json
     email = data.get('email')
     password = data.get('password')
+    pass_hasheada = generar_hash_sha1(password)
 
-    print(email, password)
 
-    # Verificar si se pasaron los datos como argumentos al ejecutar el script
-    if not (password and email):
+    if not (pass_hasheada and email):
         response = {'error': 'Asegurese que escribio su contraseña y mail en los campos'}
         return jsonify(response), 400
 
-    # Conectarse a la base de datos PostgreSQL
     try:
-        # Obtener la conexión
         Conexion.conexion()
-
-        # Seleccionar al usuario en la tabla de usuarios
-        Conexion.cursor.execute("SELECT * FROM usuarios WHERE CorreoElectronico=%s",
-        (email))
+        Conexion.cursor.execute("SELECT * FROM usuarios WHERE correo=%s", (email,))
         Conexion.conn.commit()
-
         results = Conexion.cursor.fetchall()
-        print(results)
-        # Comprobar si el usuario existe
+
         if not (results):
             print("El usuario ingresado no existe.")
         else:
-            # Autenticacion del usuario
-            if(results[0][4] == password):
+            if(results[0][4] == pass_hasheada):
                 print("Inicio de sesion exitosa.")
-                session["usuario"] = results[0]
-                #return redirect("/UserMenu")
-            else:
-                print("Mail o contraseña incorrecta. Intente nuevamente.")
-                #redirect("/Menu")
+                # Aquí debes generar y devolver un token o identificador de sesión.
+                # En este ejemplo simplificado, asumiremos que el id del usuario sirve como token.
+                return jsonify({"token": results[0][1]}), 200
 
-        # Cerrar la conexión
+            else:
+                return jsonify({"error": "Mail o contraseña incorrecta"}), 400
+
         Conexion.cursor.close()
         Conexion.conn.close()
     
-    except (Exception, psycopg2.Error) as error:
-        # Manejo de errores
-        print("Error al conectar a la base de datos:", error)
-        response = {'error': 'Error al conectar a la base de datos'}
-        return jsonify(response), 500
+    except (Exception, psycopg2.Error):
+        return jsonify({'error': 'Error al conectar a la base de datos'}), 500

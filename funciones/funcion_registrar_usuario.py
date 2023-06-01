@@ -1,4 +1,7 @@
+from funciones.limpiar_pantalla import limpiar_pantalla 
+from art import text2art
 import requests
+
 
 def funcion_registrar_usuario():
 
@@ -9,4 +12,6 @@ def funcion_registrar_usuario():
     tipoUsuario = input("Tipo de usuario: ")
     data = {'nombre': nombre, 'apellido': apellido, 'email': email, 'password': password, 'tipoUsuario': tipoUsuario}
     response = requests.post('http://localhost:5000/signup', json=data)
-    print(response.json())
+    message = response.json()['message']
+    limpiar_pantalla()
+    print(text2art(message))

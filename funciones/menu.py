@@ -1,17 +1,55 @@
-import funciones.funcion_registrar_usuario as Funciones
-import funciones.funcion_inicio_sesion as InicioSesion
+from funciones.funcion_registrar_usuario import funcion_registrar_usuario
+from funciones.funcion_inicio_sesion import funcion_inicio_sesion
+from funciones.limpiar_pantalla import limpiar_pantalla
+from art import text2art
 
 def menu():
-    opcion = -1
-    while(opcion != 4):
-        print("Bienvenido al sistema de inventario")
-        print("Elige una opcion: ")
-        print("\t1 - Registrar usuario")
-        print("\t2 - Iniciar sesion")
-        print("\t3 - Crear catalogo")
-        print("\t4 - Salir")
+    token = None
+    print(text2art("Bienvenido"))
+    while True:
+        print("1- Registrar usuario")
+        print("2- Iniciar sesion")
+        print("3- Crear catalogo")
+        print("4- Salir\n")
         opcion = int(input("Opcion: "))
         if opcion == 1:
-            Funciones.funcion_registrar_usuario()
+            funcion_registrar_usuario()
+
         elif opcion == 2:
-            InicioSesion.funcion_inicio_sesion()
+            token = funcion_inicio_sesion()
+            if token is not None:
+                userMenu(token)
+
+        elif opcion == 3:
+            if token is not None:
+                # Aquí tendrías que implementar la lógica para crear un catálogo
+                print("Crear sistema para crear catalogo")
+            else:
+                print("Debes iniciar sesión primero.")
+                
+        elif opcion == 4:
+            print("Adios")
+            break
+
+
+
+def userMenu(token):
+    limpiar_pantalla()
+    while True:
+        print(text2art(f"Hola   {token}"))
+        print("Elige una opción:")
+        print("1. Opción 1")
+        print("2. Opción 2")
+        print("3. Cerrar sesión")
+        opcion = input("Opción: ")
+        if opcion == '1':
+            # Aquí se ejecutaría el código para la Opción 1
+            print("Elegiste la Opción 1")
+        elif opcion == '2':
+            # Aquí se ejecutaría el código para la Opción 2
+            print("Elegiste la Opción 2")
+        elif opcion == '3':
+            print("Has cerrado sesión.")
+            break
+        else:
+            print("Opción inválida. Inténtalo de nuevo.")
