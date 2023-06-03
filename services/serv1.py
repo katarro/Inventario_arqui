@@ -1,6 +1,5 @@
 import socket
 import utils
-import sqlite3
 import psycopg2
 
 
@@ -43,6 +42,7 @@ if (status == 'OK'):
         print(received_message)
         client_id = received_message[5:10]
         data = eval(received_message[10:])
-        ans = login(data['username'], data['password'])
+        ans = login(data['email'], data['password'])
         response = utils.str_bus_format(ans, str(client_id)).encode('UTF-8')
         sock.send(response)
+        
