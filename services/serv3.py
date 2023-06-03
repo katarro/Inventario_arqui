@@ -3,8 +3,8 @@ import utils
 import psycopg2
 from utils import consulta_maquinaria
 
-def view_catalog():
-    print("Verificando usuario...")
+def view_catalog(nombre):
+    print(nombre)
     conn = psycopg2.connect(
         host="bbpzwcbmdyu2wotib6og-postgresql.services.clever-cloud.com",
         port="5432",
@@ -22,7 +22,7 @@ def view_catalog():
     return rows
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_address = ('localhost', 5000)
+server_address = ('200.14.84.16', 5000)
 
 sock.connect(server_address)
 
@@ -32,7 +32,7 @@ sock.send(message)
 status = sock.recv(4096)[10:12].decode('UTF-8')
 print(status)
 if (status == 'OK'):
-    print('Servicio consulta_maquinaria iniciado de forma correcta\n')
+    print('Servicio consulta juego iniciado de forma correcta\n')
     while True:
         received_message = sock.recv(4096).decode('UTF-8')
         print(received_message)
