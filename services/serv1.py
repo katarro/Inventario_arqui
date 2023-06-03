@@ -1,17 +1,14 @@
-import socket
-import utils
+from utils import sha1_hash, get_db_connection
 import psycopg2
+import socket
+import utils 
+
 
 
 def login(correo, contrasena):
     print("Verificando usuario...")
-    conn = psycopg2.connect(
-        host="bbpzwcbmdyu2wotib6og-postgresql.services.clever-cloud.com",
-        port="5432",
-        dbname="bbpzwcbmdyu2wotib6og",
-        user="uwnuqyetyjpariikmobj",
-        password="Is7jUIMZs9x9QLc93kd6WuHIw85Et4"
-    )
+    conn = get_db_connection()
+    contrasena = sha1_hash(contrasena)
     cursor = conn.cursor()
     query = f"SELECT * FROM usuarios WHERE correo = '{correo}' AND contrasena = '{contrasena}';"
     cursor.execute(query)
@@ -34,9 +31,9 @@ message = b"00050sinitserv1"
 
 sock.send(message)
 status = sock.recv(4096)[10:12].decode('UTF-8')
-print(status)
+print(status, end=" ")
 if (status == 'OK'):
-    print('Servicio login iniciado de forma correcta\n')
+    print('Servicio login iniciado correctamente\n')
     while True:
         received_message = sock.recv(4096).decode('UTF-8')
         print(received_message)
