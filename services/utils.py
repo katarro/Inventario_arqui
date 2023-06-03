@@ -1,6 +1,27 @@
-import sqlite3
-import os
 import psycopg2
+import sqlite3
+import hashlib
+import os
+
+def get_db_connection():
+    conn = psycopg2.connect(
+        host="bbpzwcbmdyu2wotib6og-postgresql.services.clever-cloud.com",
+        port="5432",
+        dbname="bbpzwcbmdyu2wotib6og",
+        user="uwnuqyetyjpariikmobj",
+        password="Is7jUIMZs9x9QLc93kd6WuHIw85Et4"
+    )
+    return conn
+
+def sha1_hash(password):
+    password_bytes = password.encode('utf-8')
+    sha1 = hashlib.sha1()
+    sha1.update(password_bytes)
+    hashed_password = sha1.hexdigest()
+
+    return hashed_password
+
+
 
 
 def str_bus_format(data, service_name=''):
