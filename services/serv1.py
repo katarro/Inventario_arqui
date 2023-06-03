@@ -2,6 +2,7 @@ import socket
 import utils
 import psycopg2
 
+
 def login(correo, contrasena):
     print("Verificando usuario...")
     conn = psycopg2.connect(
@@ -15,6 +16,7 @@ def login(correo, contrasena):
     query = f"SELECT * FROM usuarios WHERE correo = '{correo}' AND contrasena = '{contrasena}';"
     cursor.execute(query)
     rows = cursor.fetchall()
+    print(rows)
     conn.commit()
     cursor.close()
     conn.close()
@@ -40,6 +42,7 @@ if (status == 'OK'):
         print(received_message)
         client_id = received_message[5:10]
         data = eval(received_message[10:])
-        ans = login(data['username'], data['password'])
+        ans = login(data['email'], data['password'])
         response = utils.str_bus_format(ans, str(client_id)).encode('UTF-8')
         sock.send(response)
+        
