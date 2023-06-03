@@ -88,7 +88,7 @@ class App:
             h_print("\n", "-"*20, "Bienvenido", "-"*20, "\n")
             b_print("Menu de opciones:\n")
             available_services = [
-                service for service in self.services if type_id in service['user_types']
+                service for service in self.services
             ]
             services = {}
             for i in range(len(available_services)):
@@ -116,9 +116,9 @@ class App:
                 w_print("Opcion no valida")
 
 
-def display_maquinarias(res):
+def display_maquinarias(res):   #IMPORTANTEEEE
     data = eval(res[12:])
-    maquinarias = [maquinaria for maquinaria in data if not maquinaria[5]]
+    maquinarias = [maquinaria for maquinaria in data if maquinaria[1]]
     if len(maquinarias) == 0:
         f_print('No se encontraron maquinarias')
         return
@@ -127,9 +127,8 @@ def display_maquinarias(res):
         b_print('-'*20)
         print('id', maquinaria[0])
         print('nombre', maquinaria[1])
-        print('estado', maquinaria[2])
-        print('costo', maquinaria[3])
-        print('fecha de creacion', maquinaria[4])
+        print('descripcion', maquinaria[2])
+        print('disponibilidad', maquinaria[3])
 
 
 def display_componentes(res):
@@ -230,13 +229,13 @@ if __name__ == '__main__':
             },
             {
                 'id': 'serv3',
-                'desc': 'Consultar maquinarias',
+                'desc': 'Consultar juegos de mesa',
                 'user_types': [0, 1, 2],
                 'function': display_maquinarias,
                 'inputs': [
                     {
                         'key': 'id',
-                        'desc': 'Ingresa el id de la maquinaria o vacío para consultar por todas: '
+                        'desc': 'Ingresa el id del juego de mesa o vacío para consultar por todos: '
                     }
                 ]
             },
