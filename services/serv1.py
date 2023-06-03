@@ -1,10 +1,8 @@
 import socket
 import utils
-import sqlite3
 import psycopg2
 
-
-def login(nombre, apellido):
+def login(correo, contrasena):
     print("Verificando usuario...")
     conn = psycopg2.connect(
         host="bbpzwcbmdyu2wotib6og-postgresql.services.clever-cloud.com",
@@ -14,7 +12,7 @@ def login(nombre, apellido):
         password="Is7jUIMZs9x9QLc93kd6WuHIw85Et4"
     )
     cursor = conn.cursor()
-    query = f"SELECT * FROM usuarios WHERE nombre = '{nombre}' AND apellido = '{apellido}';"
+    query = f"SELECT * FROM usuarios WHERE correo = '{correo}' AND contrasena = '{contrasena}';"
     cursor.execute(query)
     rows = cursor.fetchall()
     conn.commit()
@@ -26,7 +24,7 @@ def login(nombre, apellido):
         return rows[0]
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_address = ('localhost', 5000)
+server_address = ('200.14.84.16', 5000)
 
 sock.connect(server_address)
 
