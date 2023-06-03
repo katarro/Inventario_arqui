@@ -1,5 +1,6 @@
 import sqlite3
 import os
+import psycopg2
 
 
 def str_bus_format(data, service_name=''):
@@ -178,17 +179,39 @@ def remove_db():
         pass
 
 
-def insert_user(email, name, password, rut, type):
-    conn = sqlite3.connect('db.sqlite3')
+def insert_user(nombre, apellido, email, password, tipo_usuario):
+    conn = psycopg2.connect(
+        host="bbpzwcbmdyu2wotib6og-postgresql.services.clever-cloud.com",
+        port="5432",
+        dbname="bbpzwcbmdyu2wotib6og",
+        user="uwnuqyetyjpariikmobj",
+        password="Is7jUIMZs9x9QLc93kd6WuHIw85Et4"
+    )
     c = conn.cursor()
 
+    #Buscar el suario en la db
     c.execute(
-        '''INSERT INTO users(email, name, password, rut, type) VALUES(?, ?, ?, ?, ?)''',
-        (email, name, password, rut, type)
+        '''SELECT 1 FROM usuarios WHERE correo = %s ''',
+        (email,)
     )
-
     conn.commit()
-    conn.close()
+    user = c.fetchone()
+    
+    #Si no existe el usuario hacer insert
+    if user is None:
+        c.execute(
+            '''INSERT INTO usuarios (nombre, apellido, correo, contrasena, tipousuario) VALUES (%s, %s, %s, %s, %s)''',
+            (nombre, apellido, email, password, tipo_usuario)
+        )
+        
+        conn.commit()
+        conn.close()
+        
+        return True
+
+    else: 
+        conn.close()
+        return False
 
 
 def insert_maquinaria(nombre, estado, costo):

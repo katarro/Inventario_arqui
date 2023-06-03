@@ -4,7 +4,8 @@ import sqlite3
 import psycopg2
 
 
-def login(nombre, apellido):
+def login(email, password):
+    print("login: ",email," - ", password)
     print("Verificando usuario...")
     conn = psycopg2.connect(
         host="bbpzwcbmdyu2wotib6og-postgresql.services.clever-cloud.com",
@@ -14,9 +15,10 @@ def login(nombre, apellido):
         password="Is7jUIMZs9x9QLc93kd6WuHIw85Et4"
     )
     cursor = conn.cursor()
-    query = f"SELECT * FROM usuarios WHERE nombre = '{nombre}' AND apellido = '{apellido}';"
+    query = f"SELECT * FROM usuarios WHERE correo = '{email}' AND contrasena = '{password}';"
     cursor.execute(query)
     rows = cursor.fetchall()
+    print(rows)
     conn.commit()
     cursor.close()
     conn.close()
@@ -42,6 +44,7 @@ if (status == 'OK'):
         print(received_message)
         client_id = received_message[5:10]
         data = eval(received_message[10:])
-        ans = login(data['username'], data['password'])
+        ans = login(data['email'], data['password'])
         response = utils.str_bus_format(ans, str(client_id)).encode('UTF-8')
         sock.send(response)
+        
