@@ -1,6 +1,5 @@
 import socket
 from services.utils import str_bus_format, w_print, f_print, g_print, h_print, b_print, bcolors
-
 # sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # server_address = ('localhost', 5000)
 # sock.connect(server_address)
@@ -116,19 +115,32 @@ class App:
                 w_print("Opcion no valida")
 
 
-def display_juegos(res):   #IMPORTANTEEEE
+def display_juegos(res):
     data = eval(res[12:])
     juegos = [juego for juego in data if juego[1]]
+    
     if len(juegos) == 0:
         f_print('No se encontraron juegos')
         return
-    g_print('Juegos encontradas:')
+    
+    columnas = ['titulo', 'descripcion', 'disponibilidad']
+    
+    g_print('Juegos encontrados:')
+    
     for juego in juegos:
-        b_print('-'*20)
-        print('id', juego[0])
-        print('nombre', juego[1])
-        print('descripcion', juego[2])
-        print('disponibilidad', juego[3])
+        b_print('-' * 20)
+        for columna in columnas:
+            indice = columnas.index(columna) + 1
+            valor = juego[indice]
+            if columna == 'disponibilidad':
+                if valor:
+                    valor = '\033[92m' + 'Disponible' + '\033[0m'  # Color verde
+                else:
+                    valor = '\033[91m' + 'No disponible' + '\033[0m'  # Color rojo
+            print(f'{columna.capitalize()}: {valor}')
+        print()
+
+
 
 
 def display_componentes(res):
