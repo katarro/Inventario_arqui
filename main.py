@@ -37,7 +37,6 @@ class App:
             actual_input = self.login_service['inputs'][i]
             key = actual_input['key']
             inputs[key] = input(actual_input['desc'])
-            print("inputs:"+input)
         res = self.send_message(inputs, self.login_service['id'])
         return res
 
@@ -46,7 +45,7 @@ class App:
             h_print("\n", "-"*20, "Bienvenido", "-"*20, "\n")
             b_print("Menu de opciones:\n")
             print("Opcion 1: {}".format(self.register_service['desc']))
-            print("Opcion 1: {}".format(self.login_service['desc']))
+            print("Opcion 2: {}".format(self.login_service['desc']))
             print("Opcion 0: Salir")
             option = input('Ingrese una opcion: ')
 
