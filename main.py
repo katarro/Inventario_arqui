@@ -128,11 +128,18 @@ def display_juegos(res):
     g_print('Juegos encontrados:')
     
     for juego in juegos:
-        b_print('-'*20)
-        print('id', juego[0])
-        print('nombre', juego[1])
-        print('descripcion', juego[2])
-        print('disponibilidad', juego[3])
+        b_print('-' * 20)
+        for columna in columnas:
+            indice = columnas.index(columna) + 1
+            valor = juego[indice]
+            if columna == 'disponibilidad':
+                if valor:
+                    valor = '\033[92m' + 'Disponible' + '\033[0m'  # Color verde
+                else:
+                    valor = '\033[91m' + 'No disponible' + '\033[0m'  # Color rojo
+            print(f'{columna.capitalize()}: {valor}')
+        print()
+
 
 
 def display_componentes(res):
