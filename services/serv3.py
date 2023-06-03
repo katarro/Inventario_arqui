@@ -1,6 +1,25 @@
 import socket
 import utils
+import psycopg2
 from utils import consulta_maquinaria
+
+def view_catalog():
+    print("Verificando usuario...")
+    conn = psycopg2.connect(
+        host="bbpzwcbmdyu2wotib6og-postgresql.services.clever-cloud.com",
+        port="5432",
+        dbname="bbpzwcbmdyu2wotib6og",
+        user="uwnuqyetyjpariikmobj",
+        password="Is7jUIMZs9x9QLc93kd6WuHIw85Et4"
+    )
+    cursor = conn.cursor()
+    query = f"SELECT * FROM juegos;"
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return rows
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_address = ('localhost', 5000)
@@ -19,6 +38,6 @@ if (status == 'OK'):
         print(received_message)
         client_id = received_message[5:10]
         data = eval(received_message[10:])
-        ans = consulta_maquinaria(data['id'])
+        ans = view_catalog()
         response = utils.str_bus_format(ans, str(client_id)).encode('UTF-8')
         sock.send(response)
