@@ -130,7 +130,7 @@ def display_juegos(res):
     for juego in juegos:
         b_print('-' * 20)
         for columna in columnas:
-            indice = columnas.index(columna) + 1
+            indice = columnas.index(columna)
             valor = juego[indice]
             if columna == 'disponibilidad':
                 if valor:
