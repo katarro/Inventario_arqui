@@ -125,7 +125,7 @@ def display_juegos(res):
     
     columnas = ['titulo', 'descripcion', 'disponibilidad']
     
-    g_print('Juegos encontrados:')
+    g_print('Juegos encontrados: ')
     
     for juego in juegos:
         b_print('-' * 20)
