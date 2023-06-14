@@ -18,11 +18,7 @@ def sha1_hash(password):
     sha1 = hashlib.sha1()
     sha1.update(password_bytes)
     hashed_password = sha1.hexdigest()
-
     return hashed_password
-
-
-
 
 def str_bus_format(data, service_name=''):
     total_digits = 5
@@ -43,7 +39,6 @@ def str_bus_format(data, service_name=''):
 
     return str_data_lenght
 
-
 def remove_db():
     try:
         os.remove('db.sqlite3')
@@ -51,38 +46,57 @@ def remove_db():
         pass
 
 
-def insert_user(nombre, apellido, email, password, tipo_usuario):
-    conn = psycopg2.connect(
-        host="bbpzwcbmdyu2wotib6og-postgresql.services.clever-cloud.com",
-        port="5432",
-        dbname="bbpzwcbmdyu2wotib6og",
-        user="uwnuqyetyjpariikmobj",
-        password="Is7jUIMZs9x9QLc93kd6WuHIw85Et4"
-    )
-    c = conn.cursor()
+def register(nombre, apellido, email, password, tipo_usuario):
+    # validar codigo de ADMINISTRADOR
+    if tipo_usuario == 'admin123':
+        user_type = 'Administrador'
+    else:
+        user_type = 'Alumno'
 
-    #Buscar el suario en la db
-    c.execute(
-        '''SELECT 1 FROM usuarios WHERE correo = %s ''',
-        (email,)
-    )
-    conn.commit()
-    user = c.fetchone()
-    
-    #Si no existe el usuario hacer insert
-    if user is None:
+    try:
+        conn = get_db_connection()
+    except Exception as e:
+        print(f"Error al conectarse a la base de datos: {e}")
+        return False
+
+    try:
+        c = conn.cursor()
+
+        # Verificar si los datos proporcionados son válidos
+        if not all([nombre, apellido, email, password, user_type]):
+            raise ValueError("Todos los campos son requeridos.")
+        if "@" not in email:
+            raise ValueError("Email inválido.")
+        
+        # Buscar el usuario en la base de datos
         c.execute(
-            '''INSERT INTO usuarios (nombre, apellido, correo, contrasena, tipousuario) VALUES (%s, %s, %s, %s, %s)''',
-            (nombre, apellido, email, password, tipo_usuario)
+            '''SELECT 1 FROM usuarios WHERE correo = %s ''',
+            (email,)
         )
-        
         conn.commit()
-        conn.close()
+        user = c.fetchone()
         
-        return True
+        # Si no existe el usuario, hacer insert
+        if user is None:
+            c.execute(
+                '''INSERT INTO usuarios (nombre, apellido, correo, contrasena, tipousuario) VALUES (%s, %s, %s, %s, %s)''',
+                (nombre, apellido, email, password, user_type)
+            )
+            conn.commit()
+            conn.close()
+            return True
+        else: 
+            conn.close()
+            return False
 
-    else: 
-        conn.close()
+    except psycopg2.DatabaseError as e:
+        print(f"Error en la consulta SQL: {e}")
+        return False
+    except ValueError as e:
+        print(f"Error en los datos proporcionados: {e}")
+        return False
+    except Exception as e:
+        print(f"Error inesperado: {e}")
         return False
 
 
@@ -256,8 +270,8 @@ def u_print(*text):
 
 if __name__ == '__main__':
     remove_db()
-    insert_user('admin@email.com', 'admin', 'admin',
-                '12345678-9', 0)  # admin (type 0)
+    # insert_user('admin@email.com', 'admin', 'admin',
+                # '12345678-9', 0)  # admin (type 0)
     insert_maquinaria('maquinaria1', 'nuevo', 100)
     insert_maquinaria('maquinaria2', 'casi nuevo', 200)
     insert_maquinaria('maquinaria3', 'usado', 50)

@@ -199,7 +199,7 @@ if __name__ == '__main__':
                 },
                 {
                     'key': 'tipo_usuario',
-                    'desc': 'Ingresa que tipo de usuario eres: '
+                    'desc': 'Ingresa tipo de usuario [admin] [alumno]:  '
                 },
             ]
         },

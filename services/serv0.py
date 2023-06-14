@@ -1,15 +1,12 @@
-from utils import insert_user, sha1_hash
+from utils import register, sha1_hash
 import socket
 import utils
 
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_address = ('200.14.84.16', 5000)
-
 sock.connect(server_address)
-
 message = b"00050sinitserv0"
-
 sock.send(message)
 status = sock.recv(4096)[10:12].decode('UTF-8')
 print("\n",status, end=" ")
@@ -24,9 +21,9 @@ if (status == 'OK'):
         if any(value is None for value in data.values()):
             response = False
         
-        #Si no hay valores nulos
         else:
-            ans = insert_user(
+            
+            ans = register(
                 nombre       = data['nombre'],
                 apellido     = data['apellido'],
                 email        = data['email'],

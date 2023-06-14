@@ -1,5 +1,5 @@
-trap 'kill %1; kill %2; kill %3; kill %4; kill %5; kill %6; kill %7; kill %8' SIGINT
-python3 serv0.py & \
+pkill python3 2>/dev/null
+python3 serv0.py & \ 
 python3 serv1.py & \
 # python3 serv2.py & \
 python3 serv3.py & \
