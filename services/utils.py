@@ -39,12 +39,6 @@ def str_bus_format(data, service_name=''):
 
     return str_data_lenght
 
-def remove_db():
-    try:
-        os.remove('db.sqlite3')
-    except:
-        pass
-
 
 def register(nombre, apellido, email, password, tipo_usuario):
     # validar codigo de ADMINISTRADOR
@@ -99,137 +93,54 @@ def register(nombre, apellido, email, password, tipo_usuario):
         print(f"Error inesperado: {e}")
         return False
 
+def agregar_juego(titulo, descripcion, disponibilidad):
+    # No permite agregar un juego si no esta disponible
+    disponibilidad = disponibilidad.lower()
+    if disponibilidad == 'si' or disponibilidad == 'true' or disponibilidad == 't':
+        disponibilidad = True
+    try:
+        conn = get_db_connection()
+    except Exception as e:
+        print(f"Error al conectarse a la base de datos: {e}")
+        return False
 
-def insert_maquinaria(nombre, estado, costo):
-    conn = sqlite3.connect('db.sqlite3')
-    c = conn.cursor()
+    try:
+        c = conn.cursor()
 
-    c.execute(
-        '''INSERT INTO maquinarias(nombre, estado, costo) VALUES(?, ?, ?)''',
-        (nombre, estado, costo)
-    )
-
-    conn.commit()
-    conn.close()
-
-
-def consulta_maquinaria(id_maquinaria=''):
-    conn = sqlite3.connect('db.sqlite3')
-    c = conn.cursor()
-    if id_maquinaria == '':
-        c.execute('''SELECT * FROM maquinarias''')
-    else:
+        # Verificar si los datos proporcionados son válidos
+        if not all([titulo, descripcion, disponibilidad]):
+            raise ValueError("Todos los campos son requeridos.")
+        
+        # Buscar el juego en la base de datos
         c.execute(
-            '''SELECT * FROM maquinarias WHERE id= ?''', (id_maquinaria,))
-    res = c.fetchall()
-    conn.commit()
-    conn.close()
-    return res
-
-
-def update_maquinaria(id_maquinaria, nombre, estado, costo):
-    conn = sqlite3.connect('db.sqlite3')
-    c = conn.cursor()
-
-    c.execute(
-        '''UPDATE maquinarias SET nombre= ?, estado= ?, costo= ? WHERE id= ?''',
-        (nombre, estado, costo, id_maquinaria)
-    )
-
-    conn.commit()
-    conn.close()
-    return c.rowcount
-
-
-def delete_maquinaria(id_maquinaria):
-    conn = sqlite3.connect('db.sqlite3')
-    c = conn.cursor()
-
-    c.execute(
-        '''UPDATE maquinarias SET fecha_salida=CURRENT_DATE WHERE id= ?''',
-        (id_maquinaria)
-    )
-
-    conn.commit()
-    conn.close()
-    return c.rowcount
-
-
-def insert_componente(id_maquinaria, nombre, estado, marca, modelo, costo):
-    conn = sqlite3.connect('db.sqlite3')
-    c = conn.cursor()
-
-    c.execute(
-        '''INSERT INTO componentes(id_maquinaria, nombre, estado, marca, modelo, costo) VALUES(?, ?, ?, ?, ?, ?)''',
-        (id_maquinaria, nombre, estado, marca, modelo, costo)
-    )
-
-    conn.commit()
-    conn.close()
-    return c.rowcount
-
-
-def consulta_componente(id_componente=''):
-    conn = sqlite3.connect('db.sqlite3')
-    c = conn.cursor()
-    if id_componente == '':
-        c.execute('''SELECT * FROM componentes''')
-    else:
-        c.execute(
-            '''SELECT * FROM componentes WHERE id= ?''', (id_componente,))
-    res = c.fetchall()
-    conn.commit()
-    conn.close()
-    return res
-
-
-def consulta_historial_componente(id_componente=''):
-    conn = sqlite3.connect('db.sqlite3')
-    c = conn.cursor()
-    print(id_componente)
-    c.execute(
-        '''SELECT * FROM historial_componentes WHERE id_componente= ?''', (id_componente,))
-    res = c.fetchall()
-    conn.commit()
-    conn.close()
-    return res
-
-
-def update_componente(
-    id_componente,
-    id_maquinaria,
-    nombre,
-    estado,
-    marca,
-    modelo,
-    costo
-):
-    conn = sqlite3.connect('db.sqlite3')
-    c = conn.cursor()
-
-    c.execute(
-        '''UPDATE componentes
-        SET id_maquinaria= ?,
-            nombre= ?,
-            estado= ?,
-            marca= ?,
-            modelo= ?,
-            costo= ?
-        WHERE id= ?''',
-        (
-            id_maquinaria,
-            nombre,
-            estado,
-            marca,
-            modelo,
-            costo,
-            id_componente
+            '''SELECT 1 FROM juegos WHERE titulo = %s ''',
+            (titulo,)
         )
-    )
+        conn.commit()
+        juego = c.fetchone()
+        
+        # Si no existe el juego, hacer insert
+        if juego is None:
+            c.execute(
+                '''INSERT INTO juegos (titulo, descripcion, disponibilidad) VALUES (%s, %s, %s)''',
+                (titulo, descripcion, disponibilidad)
+            )
+            conn.commit()
+            conn.close()
+            return True
+        else: 
+            conn.close()
+            return False
 
-    conn.commit()
-    conn.close()
-    return c.rowcount
+    except psycopg2.DatabaseError as e:
+        print(f"Error en la consulta SQL: {e}")
+        return False
+    except ValueError as e:
+        print(f"Error en los datos proporcionados: {e}")
+        return False
+    except Exception as e:
+        print(f"Error inesperado: {e}")
+        return False
 
 
 class bcolors:
@@ -268,16 +179,9 @@ def u_print(*text):
     print(bcolors.UNDERLINE, *text, bcolors.ENDC)
 
 
-if __name__ == '__main__':
-    remove_db()
-    # insert_user('admin@email.com', 'admin', 'admin',
-                # '12345678-9', 0)  # admin (type 0)
-    insert_maquinaria('maquinaria1', 'nuevo', 100)
-    insert_maquinaria('maquinaria2', 'casi nuevo', 200)
-    insert_maquinaria('maquinaria3', 'usado', 50)
-    insert_componente(1, 'componente2', 'nuevo', 'marca2', 'modelo2', 20)
-    insert_componente(1, 'componente3', 'nuevo', 'marca3', 'modelo3', 30)
-    insert_componente(2, 'componente4', 'nuevo', 'marca4', 'modelo4', 40)
-    insert_componente(2, 'componente5', 'nuevo', 'marca5', 'modelo5', 50)
-    insert_componente(2, 'componente6', 'nuevo', 'marca6', 'modelo6', 60)
-    insert_componente(3, 'componente7', 'nuevo', 'marca7', 'modelo7', 70)
+
+
+
+
+
+

@@ -6,13 +6,14 @@ from services.utils import str_bus_format, w_print, f_print, g_print, h_print, b
 
 
 class App:
-    def __init__(self, register_service, login_service, services=[]) -> None:
+    def __init__(self, register_service, login_service, services=[], admin_services=[]) -> None:
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.register_service = register_service
+        self.admin_services = admin_services
         server_address = ('localhost', 5000)
+        self.login_service = login_service
         self.sock.connect(server_address)
         self.services = services
-        self.login_service = login_service
-        self.register_service = register_service
 
     def send_message(self, data, service_name='g7999'):
         req = str_bus_format(data, service_name).encode('UTF-8')
@@ -38,6 +39,9 @@ class App:
             inputs[key] = input(actual_input['desc'])
         res = self.send_message(inputs, self.login_service['id'])
         return res
+
+
+
 
     def show_menu(self):
         while True:
@@ -85,10 +89,16 @@ class App:
             input(
                 f'{bcolors.UNDERLINE}Presione enter para continuar...{bcolors.ENDC}')
             h_print("\n", "-"*20, "Bienvenido", "-"*20, "\n")
-            b_print("Menu de opciones:\n")
-            available_services = [
-                service for service in self.services
-            ]
+            
+            # Decide qué servicios mostrar basado en el tipo de usuario
+            if type_id == 'Administrador':
+                available_services = self.admin_services
+                g_print("Menu de administrador:\n")
+
+            else:
+                available_services = self.services
+                g_print("Menu de usuario:\n")
+                
             services = {}
             for i in range(len(available_services)):
                 actual_service = available_services[i]
@@ -105,14 +115,16 @@ class App:
                     actual_input = service['inputs'][i]
                     key = actual_input['key']
                     inputs[key] = input(actual_input['desc'])
-                res = self.send_message(inputs, service['id'])
+                res = self.send_message(inputs, service['id']) # Dirige al servicio correspondiente
                 if res[10:12] == 'NK':
                     f_print('Servicio no disponible')
                     pass
                 else:
+                    print(res,"\n")
                     service['function'](res)
             else:
                 w_print("Opcion no valida")
+
 
 
 def display_juegos(res):
@@ -217,7 +229,7 @@ if __name__ == '__main__':
                 }
             ]
         },
-        services=[           
+        services=[
             {
                 'id': 'serv3',
                 'desc': 'Consultar juegos de mesa',
@@ -229,7 +241,28 @@ if __name__ == '__main__':
                         'desc': 'Nombre del juego o vacío para consultar por todos: '
                     }
                 ]
-            },
+            }
+        ],
+        admin_services=[
+            {
+                'id':'serv2',
+                'desc': 'Agregar nuevo juego',
+                'function': lambda res: g_print('Juego agregado exitosamente') if eval(res[12:]) else f_print('No se pudo agregar el juego'),
+                'inputs':[
+                    {
+                        'key': 'titulo',
+                        'desc': 'Nombre del juego: '
+                    },
+                    {
+                        'key': 'descripcion',
+                        'desc': 'Descripcion: '
+                    },
+                    {
+                        'key':'disponibilidad',
+                        'desc':'Disponibilidad [si] [no]: '
+                    }
+                ]
+            }
         ]
     )
     res = app.show_menu()
