@@ -31,7 +31,7 @@ message = b"00050sinitserv1"
 
 sock.send(message)
 status = sock.recv(4096)[10:12].decode('UTF-8')
-print(status, end=" ")
+print("\n",status, end=" ")
 if (status == 'OK'):
     print('Servicio login iniciado correctamente\n')
     while True:

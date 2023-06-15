@@ -20,9 +20,9 @@ if (status == 'OK'):
         #si hay un valor nulo
         if any(value is None for value in data.values()):
             response = False
-        
+
         else:
-            
+
             ans = register(
                 nombre       = data['nombre'],
                 apellido     = data['apellido'],

@@ -1,9 +1,13 @@
-import socket
 from services.utils import str_bus_format, w_print, f_print, g_print, h_print, b_print, bcolors
+import readline
+import socket
+import re
+
 # sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # server_address = ('localhost', 5000)
 # sock.connect(server_address)
 
+readline.set_history_length(100)  # Número máximo de comandos a recordar
 
 class App:
     def __init__(self, register_service, login_service, services=[], admin_services=[]) -> None:
@@ -20,26 +24,60 @@ class App:
         self.sock.send(req)
         return self.sock.recv(4096).decode('UTF-8')
 
+
     def register(self):
         h_print('\n', '-'*20, 'Register', '-'*20, '\n')
         inputs = {}
+        email_pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+
         for i in range(len(self.register_service['inputs'])):
             actual_input = self.register_service['inputs'][i]
             key = actual_input['key']
-            inputs[key] = input(actual_input['desc'])
+            desc = actual_input['desc']
+            value = input(desc)
+
+            while not value.strip():  # Verificar si el string está vacío o contiene solo espacios en blanco
+                print("El valor no puede estar vacío.")
+                value = input(desc)
+
+            if key == 'email':
+                while not re.match(email_pattern, value):
+                    print("El correo electrónico ingresado no es válido.")
+                    value = input(desc)
+
+            inputs[key] = value
+
         res = self.send_message(inputs, self.register_service['id'])
         return res
+
 
     def login(self):
         h_print('\n', '-'*20, 'Login', '-'*20, '\n')
         inputs = {}
+        email_pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+
+
+
         for i in range(len(self.login_service['inputs'])):
             actual_input = self.login_service['inputs'][i]
             key = actual_input['key']
-            inputs[key] = input(actual_input['desc'])
+            desc = actual_input['desc']
+            value = input(desc)
+
+            while not value.strip():  # Verificar si el string está vacío o contiene solo espacios en blanco
+                print("El valor no puede estar vacío.")
+                value = input(desc)
+
+            if key == 'email':
+                while not re.match(email_pattern, value):
+                    print("El correo electrónico ingresado no es válido.")
+                    value = input(desc)
+
+            inputs[key] = value
+
         res = self.send_message(inputs, self.login_service['id'])
         return res
-
+        
 
 
 
@@ -188,6 +226,8 @@ def display_historial_componente(res):
 
 
 if __name__ == '__main__':
+
+
     app = App(
         register_service={
             'id': 'serv0',
