@@ -24,7 +24,6 @@ class App:
         self.sock.send(req)
         return self.sock.recv(4096).decode('UTF-8')
 
-
     def register(self):
         h_print('\n', '-'*20, 'Register', '-'*20, '\n')
         inputs = {}
@@ -49,7 +48,6 @@ class App:
 
         res = self.send_message(inputs, self.register_service['id'])
         return res
-
 
     def login(self):
         h_print('\n', '-'*20, 'Login', '-'*20, '\n')
@@ -77,10 +75,7 @@ class App:
 
         res = self.send_message(inputs, self.login_service['id'])
         return res
-        
-
-
-
+       
     def show_menu(self):
         while True:
             h_print("\n", "-"*20, "Bienvenido", "-"*20, "\n")
@@ -120,7 +115,6 @@ class App:
                 return
             else:
                 w_print("Opcion no valida")
-
 
     def menu(self, type_id):
         while True:
@@ -163,8 +157,6 @@ class App:
             else:
                 w_print("Opcion no valida")
 
-
-
 def display_juegos(res):
     data = eval(res[12:])
     juegos = [juego for juego in data if juego[1]]
@@ -190,8 +182,6 @@ def display_juegos(res):
             print(f'{columna.capitalize()}: {valor}')
         print()
 
-
-
 def display_componentes(res):
     data = eval(res[12:])
     componentes = [componente for componente in data if not componente[8]]
@@ -209,7 +199,6 @@ def display_componentes(res):
         print('modelo', componente[5])
         print('costo', componente[6])
         print('fecha de creacion', componente[7])
-
 
 def display_historial_componente(res):
     data = eval(res[12:])
@@ -279,6 +268,17 @@ if __name__ == '__main__':
                     {
                         'key': 'id',
                         'desc': 'Nombre del juego o vacío para consultar por todos: '
+                    }
+                ]
+            },
+            {
+                'id': 'serv4',
+                'desc': 'Reservar juego',
+                'function' : lambda res: g_print('Juego Rervado exitosamente') if eval(res[12:]) else f_print('No se pudo Rservar el juego :( '),
+                'inputs':[
+                    {
+                        'key': 'id',
+                        'desc': 'Nombre del juego que desea Reservar: '
                     }
                 ]
             }

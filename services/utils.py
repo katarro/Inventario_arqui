@@ -1,7 +1,7 @@
 import psycopg2
-import sqlite3
+import datetime
 import hashlib
-import os
+# from globals import id_user
 
 def get_db_connection():
     conn = psycopg2.connect(
@@ -38,7 +38,6 @@ def str_bus_format(data, service_name=''):
         service_name+transformed_data
 
     return str_data_lenght
-
 
 def register(nombre, apellido, email, password, tipo_usuario):
     # validar codigo de ADMINISTRADOR
@@ -141,6 +140,8 @@ def agregar_juego(titulo, descripcion, disponibilidad):
     except Exception as e:
         print(f"Error inesperado: {e}")
         return False
+
+
 
 
 class bcolors:

@@ -1,8 +1,10 @@
-from utils import sha1_hash, get_db_connection
-import psycopg2
+from utils import get_db_connection, sha1_hash
 import socket
 import utils 
 
+def guardar_variable(nombre_archivo, variable):
+    with open(nombre_archivo, 'w') as f:
+        f.write(str(variable))
 
 
 def login(correo, contrasena):
@@ -20,7 +22,11 @@ def login(correo, contrasena):
     if len(rows) == 0:
         return None
     else:
+        id_user = rows[0][0]
+        guardar_variable("mi_variable.txt",id_user)
         return rows[0]
+
+
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_address = ('200.14.84.16', 5000)
@@ -28,7 +34,6 @@ server_address = ('200.14.84.16', 5000)
 sock.connect(server_address)
 
 message = b"00050sinitserv1"
-
 sock.send(message)
 status = sock.recv(4096)[10:12].decode('UTF-8')
 print("\n",status, end=" ")
