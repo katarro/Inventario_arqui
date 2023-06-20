@@ -301,6 +301,29 @@ if __name__ == '__main__':
                         'desc':'Nombre del juego: '
                     }
                 ]
+            },
+            {
+                'id':'serv6',
+                'desc': 'Editar juego',
+                'function': lambda res: g_print('Juego editado exitosamente') if eval(res[12:]) else f_print('No se pudo editar el juego'),
+                'inputs':[                    
+                    {
+                        'key':'id',
+                        'desc':'Nombre del juego a editar: '
+                    },
+                    {
+                        'key':'nuevo_titulo',
+                        'desc':'Nuevo nombre del juego o Vacio para omitir: '
+                    },
+                    {
+                        'key':'nueva_descripcion',
+                        'desc':'Nueva descripcion o vacio para omitir: '
+                    },
+                    {
+                        'key':'nueva_disponibilidad',
+                        'desc':'Disponible [si][no] o vacio para omitir: '
+                    }
+                ]
             }
         ]
     )
