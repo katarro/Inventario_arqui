@@ -10,7 +10,8 @@ def view_catalog(titulo):
         pass
         query = "SELECT * FROM juegos;"
     else:
-        query = f"SELECT titulo, descripcion, disponibilidad FROM juegos WHERE titulo = '{titulo}';"
+        #query = f"SELECT titulo, descripcion, disponibilidad FROM juegos WHERE titulo = '{titulo}';"
+        query = f"SELECT * FROM juegos WHERE titulo = '{titulo}';"
     cursor.execute(query)
     rows = cursor.fetchall()
     conn.commit()

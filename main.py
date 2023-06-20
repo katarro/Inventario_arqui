@@ -2,7 +2,7 @@ from services.utils import str_bus_format, w_print, f_print, g_print, h_print, b
 import readline
 import socket
 import re
-
+import os
 # sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # server_address = ('localhost', 5000)
 # sock.connect(server_address)
@@ -26,6 +26,7 @@ class App:
 
 
     def register(self):
+        os.system('clear')
         h_print('\n', '-'*20, 'Register', '-'*20, '\n')
         inputs = {}
         email_pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
@@ -82,6 +83,7 @@ class App:
 
 
     def show_menu(self):
+
         while True:
             h_print("\n", "-"*20, "Bienvenido", "-"*20, "\n")
             b_print("Menu de opciones:\n")
@@ -108,11 +110,12 @@ class App:
                 data = eval(res[12:])
                 if res[10:12] == 'NK':
                     f_print('Servicio no disponible')
-                    pass
+
                 elif data == None:
                     f_print('Login fallido')
-                    pass
+
                 else:
+                    os.system('clear')
                     g_print('Login exitoso')
                     self.menu(data[-1])
 
@@ -124,6 +127,7 @@ class App:
 
     def menu(self, type_id):
         while True:
+
             input(
                 f'{bcolors.UNDERLINE}Presione enter para continuar...{bcolors.ENDC}')
             h_print("\n", "-"*20, "Bienvenido", "-"*20, "\n")
@@ -131,10 +135,12 @@ class App:
             # Decide qué servicios mostrar basado en el tipo de usuario
             if type_id == 'Administrador':
                 available_services = self.admin_services
+                os.system('clear')
                 g_print("Menu de administrador:\n")
 
             else:
                 available_services = self.services
+                os.system('clear')
                 g_print("Menu de usuario:\n")
                 
             services = {}
@@ -166,6 +172,7 @@ class App:
 
 
 def display_juegos(res):
+    os.system('clear')
     data = eval(res[12:])
     juegos = [juego for juego in data if juego[1]]
     
