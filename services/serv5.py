@@ -8,6 +8,7 @@ def eliminar_juego(titulo):
         conn = utils.get_db_connection()
     except Exception as e:
         print(f"Error al conectarse a la base de datos: {e}")
+        conn.close()
         return False
 
     try:
@@ -32,15 +33,18 @@ def eliminar_juego(titulo):
 
     except psycopg2.DatabaseError as e:
         print(f"Error en la consulta SQL: {e}")
+        conn.close()
         return False
+    
     except ValueError as e:
         print(f"Error en los datos proporcionados: {e}")
+        conn.close()
         return False
+    
     except Exception as e:
         print(f"Error inesperado: {e}")
+        conn.close()
         return False
-
-
 
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
