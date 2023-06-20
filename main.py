@@ -36,7 +36,7 @@ class App:
             desc = actual_input['desc']
             value = input(desc)
 
-            while not value.strip():  # Verificar si el string está vacío o contiene solo espacios en blanco
+            while not value.strip(): 
                 print("El valor no puede estar vacío.")
                 value = input(desc)
 
@@ -145,6 +145,7 @@ class App:
             print("Opcion 0: Salir")
             option = input('Ingrese una opcion: ')
             if option == '0':
+                os.system('clear')
                 return
             elif option in services:
                 service = services[option]
@@ -188,38 +189,6 @@ def display_juegos(res):
                     valor = '\033[91m' + 'No disponible' + '\033[0m'  # Color rojo
             print(f'{columna.capitalize()}: {valor}')
         print()
-
-def display_componentes(res):
-    data = eval(res[12:])
-    componentes = [componente for componente in data if not componente[8]]
-    if len(data) == 0:
-        f_print('No se encontraron componentes')
-        return
-    g_print('Componentes encontrados:')
-    for componente in componentes:
-        b_print('-'*20)
-        print('id', componente[0])
-        print('id_maquinaria', componente[1])
-        print('nombre', componente[2])
-        print('estado', componente[3])
-        print('marca', componente[4])
-        print('modelo', componente[5])
-        print('costo', componente[6])
-        print('fecha de creacion', componente[7])
-
-def display_historial_componente(res):
-    data = eval(res[12:])
-    for componente in data:
-        b_print('-'*20)
-        print('id', componente[0])
-        print('id_maquinaria', componente[1])
-        print('nombre', componente[2])
-        print('estado', componente[3])
-        print('marca', componente[4])
-        print('modelo', componente[5])
-        print('costo', componente[6])
-        print('fecha de modificacion', componente[7])
-
 
 if __name__ == '__main__':
 
@@ -307,6 +276,29 @@ if __name__ == '__main__':
                     {
                         'key':'disponibilidad',
                         'desc':'Disponibilidad [si] [no]: '
+                    }
+                ]
+            },
+            {
+                'id': 'serv3',
+                'desc': 'Consultar juegos de mesa',
+                'user_types': [0, 1, 2],
+                'function': display_juegos,
+                'inputs': [
+                    {
+                        'key': 'id',
+                        'desc': 'Nombre del juego o vacío para consultar por todos: '
+                    }
+                ]
+            },
+            {
+                'id':'serv5',
+                'desc': 'Eliminar juego',
+                'function': lambda res: g_print('Juego eliminado exitosamente') if eval(res[12:]) else f_print('No se pudo eliminar el juego'),
+                'inputs':[
+                    {
+                        'key':'id',
+                        'desc':'Nombre del juego: '
                     }
                 ]
             }
