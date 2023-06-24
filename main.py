@@ -257,6 +257,21 @@ if __name__ == '__main__':
                         'desc': 'Nombre del juego que desea Reservar: '
                     }
                 ]
+            },
+            {
+                'id':'serv7',
+                'desc': 'Modificar Reserva',
+                'function': lambda res: g_print('Reserva editada exitosamente') if eval(res[12:]) else f_print('No se pudo editar la reserva'),
+                'inputs':[                    
+                    {
+                        'key':'id',
+                        'desc':'Nombre del juego que reservo: '
+                    },
+                    {
+                        'key':'nuevo_juego',
+                        'desc':'Nuevo juego a reservar: '
+                    },
+                ]
             }
         ],
         admin_services=[
@@ -324,7 +339,7 @@ if __name__ == '__main__':
                         'desc':'Disponible [si][no] o vacio para omitir: '
                     }
                 ]
-            }
+            },
         ]
     )
     res = app.show_menu()
