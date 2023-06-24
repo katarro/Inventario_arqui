@@ -272,6 +272,17 @@ if __name__ == '__main__':
                         'desc':'Nuevo juego a reservar: '
                     },
                 ]
+            },
+            {
+                'id':'serv8',
+                'desc': 'Cancelar Reserva',
+                'function': lambda res: g_print('Reserva fue cancelada exitosamente') if eval(res[12:]) else f_print('No se pudo cancelar la reserva'),
+                'inputs':[                    
+                    {
+                        'key':'titulo',
+                        'desc':'Nombre del juego que reservo: '
+                    },
+                ]
             }
         ],
         admin_services=[
