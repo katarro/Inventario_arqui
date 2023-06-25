@@ -1,10 +1,16 @@
 from utils import get_db_connection
-import datetime
 import socket
 import psycopg2
 import utils
 
+def leer_variable(nombre_archivo):
+    with open(nombre_archivo, 'r') as f:
+        variable = f.read()
+    return int(variable) 
+
 def modificar_reserva(titulo ,nuevo_juego):
+    id_user = leer_variable('mi_variable.txt')
+
     try:
         conn = get_db_connection()
     except Exception as e:
@@ -13,7 +19,7 @@ def modificar_reserva(titulo ,nuevo_juego):
     
     try:
         c   = conn.cursor()
-        if not titulo: raise ValueError("El título del juego reservado es necesario.")
+        if not titulo or not nuevo_juego: raise ValueError("El título del juego reservado o el juego a reservar es necesario.")
         #Id del juego reservado
         c.execute('''SELECT idjuego, disponibilidad FROM juegos WHERE titulo = %s ''',(titulo,))
         conn.commit()
@@ -21,7 +27,7 @@ def modificar_reserva(titulo ,nuevo_juego):
 
         if idjuego is not None:
             #Obtener id de la reserva
-            c.execute('''SELECT idreserva FROM reservas WHERE idjuego = %s ''',(idjuego[0],))
+            c.execute('''SELECT idreserva FROM reservas WHERE idjuego = %s AND idusuario = %s''',(idjuego[0],id_user))
             conn.commit()
             idreserva = c.fetchone()
             
