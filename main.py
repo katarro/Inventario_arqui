@@ -3,6 +3,7 @@ import readline
 import socket
 import re
 import os
+import getpass
 # sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # server_address = ('localhost', 5000)
 # sock.connect(server_address)
@@ -55,17 +56,18 @@ class App:
         inputs = {}
         email_pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
 
-
-
         for i in range(len(self.login_service['inputs'])):
             actual_input = self.login_service['inputs'][i]
             key = actual_input['key']
             desc = actual_input['desc']
-            value = input(desc)
+            if key == 'password':
+                value = getpass.getpass(desc)
+            else:
+                value = input(desc)
 
             while not value.strip():  # Verificar si el string está vacío o contiene solo espacios en blanco
                 print("El valor no puede estar vacío.")
-                value = input(desc)
+                value = getpass.getpass(desc)
 
             if key == 'email':
                 while not re.match(email_pattern, value):
