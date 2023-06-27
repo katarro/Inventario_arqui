@@ -183,7 +183,7 @@ def display_juegos(res):
         b_print('-' * 20)
         for columna in columnas:
             indice = columnas.index(columna)
-            valor = juego[indice]
+            valor = juego[indice+1]
             if columna == 'disponibilidad':
                 if valor:
                     valor = '\033[92m' + 'Disponible' + '\033[0m'  # Color verde
