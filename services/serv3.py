@@ -1,5 +1,4 @@
 from utils import get_db_connection
-import psycopg2
 import socket
 import utils
 
@@ -8,9 +7,11 @@ def view_catalog(titulo):
     conn = get_db_connection()
     cursor = conn.cursor()
     if titulo == '':
+        pass
         query = "SELECT * FROM juegos;"
     else:
-        query = f"SELECT titulo, descripcion, disponibilidad FROM juegos WHERE titulo = '{titulo}';"
+        #query = f"SELECT titulo, descripcion, disponibilidad FROM juegos WHERE titulo = '{titulo}';"
+        query = f"SELECT * FROM juegos WHERE titulo = '{titulo}';"
     cursor.execute(query)
     rows = cursor.fetchall()
     conn.commit()
