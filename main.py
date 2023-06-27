@@ -192,6 +192,31 @@ def display_juegos(res):
             print(f'{columna.capitalize()}: {valor}')
         print()
 
+#imprime el horario
+def display_horario(res):
+    os.system('clear')
+    data = eval(res[12:])
+    horarios = [horario for horario in data if horario[1]]
+  
+    columnas = ['id', "dia de semana", 'hora de apertura', 'hora de cierre', 'es feriado']
+
+    g_print('Horarios encontrados:')
+
+    for horario in horarios:
+        b_print('-' * 20)
+        for columna in columnas:
+            indice = columnas.index(columna) + 1
+            valor = horario[indice]
+            if columna == 'es feriado':
+                if valor:
+                    valor = '\033[92m' + 'Es feriado' + '\033[0m'
+                else:
+                    valor = '\033[91m' + 'No es feriado' + '\033[0m'
+            print(f'{columna.capitalize()}: {valor}')
+        print()
+
+
+
 if __name__ == '__main__':
 
 
@@ -350,6 +375,34 @@ if __name__ == '__main__':
                     {
                         'key':'nueva_disponibilidad',
                         'desc':'Disponible [si][no] o vacio para omitir: '
+                    }
+                ]
+            },
+            {
+                'id':'serv10',
+                'desc': 'Ver Horario',
+                'function': display_horario,
+            },
+            {
+                'id':'serv9',
+                'desc': 'Editar Horario',
+                'function': lambda res: g_print('Horario editado exitosamente') if eval(res[12:]) else f_print('No se pudo editar el horario'),
+                'inputs':[
+                    {
+                        'key':'dia_semana',
+                        'desc':'Dia de la semana: '
+                    },
+                    {
+                        'key':'horario_apertura',
+                        'desc':'Horario de apertura: '
+                    },
+                    {
+                        'key':'horario_cierre',
+                        'desc':'Horario de cierre: '
+                    },
+                    {
+                        'key':'es_feriado',
+                        'desc':'Es feriado [si][no]: '
                     }
                 ]
             },
