@@ -383,17 +383,6 @@ if __name__ == '__main__':
                 ]
             },
             {
-                'id':'serv10',
-                'desc': 'Ver Horario',
-                'function': display_horario,
-                'inputs': [
-                    {
-                        'key': 'dia_semana',
-                        'desc': 'Dia de la semana o vacío para consultar por todos: '
-                    }
-                ]
-            },
-            {
                 'id':'serv9',
                 'desc': 'Editar Horario',
                 'function': lambda res: g_print('Horario editado exitosamente') if eval(res[12:]) else f_print('No se pudo editar el horario'),
@@ -413,6 +402,17 @@ if __name__ == '__main__':
                     {
                         'key':'es_feriado',
                         'desc':'Es feriado [si][no]: '
+                    }
+                ]
+            },
+            {
+                'id':'serv10',
+                'desc': 'Ver Horario',
+                'function': display_horario,
+                'inputs': [
+                    {
+                        'key': 'id',
+                        'desc': 'Dia de la semana o vacío para consultar por todos: '
                     }
                 ]
             },
