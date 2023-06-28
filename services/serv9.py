@@ -3,7 +3,7 @@ import utils
 import datetime
 import psycopg2
 
-def editar_horario(dia_semana, hora_apertura, hora_cierre, es_feriado):
+def editar_horario(dia_semana, hora_apertura, hora_cierre, es_feriado=None):
     # dia_semana: (Lunes-Domingo)
     # hora_apertura: (00:00-23:59)
     # hora_cierre: (00:00-23:59)
@@ -18,20 +18,35 @@ def editar_horario(dia_semana, hora_apertura, hora_cierre, es_feriado):
         c = conn.cursor()
         # Obtener id del horario
         c.execute('''SELECT idhorario FROM horarios WHERE diasemana = %s''', (dia_semana,))
-        conn.commit()
-        id_horario = c.fetchone()
+        id_horario = c.fetchone()[0]
 
-        if id_horario is not None:
-            # Actualizar horario
-            c.execute('''UPDATE horarios SET horaapertura = %s, horacierre = %s, esferiado = %s WHERE idhorario = %s''', (hora_apertura, hora_cierre, es_feriado))
-            conn.commit()
-            conn.close()
-            return True
-        else:
-            conn.close()
-            print(f"El horario del día {dia_semana} no existe.")
+        campos_a_actualizar = []
+        
+        if hora_apertura:
+            campos_a_actualizar.append(f"horaapertura = '{hora_apertura}'")
+        if hora_cierre:
+            campos_a_actualizar.append(f"horacierre = '{hora_cierre}'")
+        if es_feriado is not None:
+            
+            if es_feriado == 'no' or es_feriado == 'No':
+                es_feriado = False
+                campos_a_actualizar.append(f"esferiado = {es_feriado}")
+
+            if es_feriado == 'si' or es_feriado == 'Si':
+                es_feriado = True
+                campos_a_actualizar.append(f"esferiado = {es_feriado}")
+        
+        if not campos_a_actualizar:
+            print("No se proporcionaron campos para actualizar.")
             return False
-    
+        
+        consulta_sql = f"UPDATE horarios SET {', '.join(campos_a_actualizar)} WHERE idhorario = {id_horario};"
+        print(consulta_sql)
+        c.execute(consulta_sql)
+        conn.commit()
+        c.close()
+        conn.close()
+        return True
     except psycopg2.DatabaseError as e:
         print(f"Error en la consulta SQL: {e}")
         return False

@@ -157,6 +157,7 @@ class App:
                     key = actual_input['key']
                     inputs[key] = input(actual_input['desc'])
                 res = self.send_message(inputs, service['id']) # Dirige al servicio correspondiente
+                print(res)
                 if res[10:12] == 'NK':
                     f_print('Servicio no disponible')
                     pass
@@ -402,18 +403,6 @@ if __name__ == '__main__':
                     {
                         'key':'es_feriado',
                         'desc':'Es feriado [si][no]: '
-                    }
-                ]
-            },
-            {
-                'id':'servh',
-                'desc': 'Ver Horario',
-                'user_types': [0, 1, 2],
-                'function': display_horario,
-                'inputs': [
-                    {
-                        'key': 'id',
-                        'desc': 'Dia de la semana o vacío para consultar por todos: '
                     }
                 ]
             }
