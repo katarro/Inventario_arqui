@@ -393,11 +393,11 @@ if __name__ == '__main__':
                         'desc':'Dia de la semana: '
                     },
                     {
-                        'key':'horario_apertura',
+                        'key':'hora_apertura',
                         'desc':'Horario de apertura: '
                     },
                     {
-                        'key':'horario_cierre',
+                        'key':'hora_cierre',
                         'desc':'Horario de cierre: '
                     },
                     {
