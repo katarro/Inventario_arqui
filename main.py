@@ -406,7 +406,7 @@ if __name__ == '__main__':
                 ]
             },
             {
-                'id':'serv10',
+                'id':'servh',
                 'desc': 'Ver Horario',
                 'user_types': [0, 1, 2],
                 'function': display_horario,
