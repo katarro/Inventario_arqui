@@ -3,7 +3,7 @@ import utils
 import datetime
 import psycopg2
 
-def ver_horario():
+def ver_horario(diasemana):
     try:
         conn = utils.get_db_connection()
     except Exception as e:
@@ -11,11 +11,16 @@ def ver_horario():
         return False
     
     try:
-        c = conn.cursor()
-        # Obtener id del horario
-        c.execute('''SELECT * FROM horarios''')
-        rows = c.fetchall()
+        cursor = conn.cursor()
+        if diasemana == '':
+            pass
+            query = "SELECT * FROM horario;"
+        else:
+            query = f"SELECT * FROM horario WHERE diasemana = '{diasemana}';"
+        cursor.execute(query)
+        rows = cursor.fetchall()
         conn.commit()
+        cursor.close()
         conn.close()
         return rows
     
@@ -46,7 +51,7 @@ sock.send(message)
 status = sock.recv(4096)[10:12].decode('UTF-8')
 print(status)
 if status == 'OK':
-    print('Servicio consulta_historial_componentes iniciado de forma correcta\n')
+    print('Servicio ver horario iniciado de forma correcta\n')
     while True:
         received_message = sock.recv(4096).decode('UTF-8')
         print(received_message)

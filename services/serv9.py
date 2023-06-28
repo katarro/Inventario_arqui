@@ -56,14 +56,14 @@ sock.send(message)
 status = sock.recv(4096)[10:12].decode('UTF-8')
 print(status)
 if status == 'OK':
-    print('Servicio consulta_historial_componentes iniciado de forma correcta\n')
+    print('Servicio editar horario iniciado de forma correcta\n')
     while True:
         received_message = sock.recv(4096).decode('UTF-8')
         print(received_message)
         client_id = received_message[5:10]
         data = eval(received_message[10:])
         # Llamar a la función crear_horario con los datos proporcionados
-        exito = editar_horario(data['horario_apertura'], data['horario_cierre'], data['dia_feriado'])
+        exito = editar_horario(data['hora_apertura'], data['hora_cierre'], data['es_feriado'])
         if exito:
             response = utils.str_bus_format('Horario creado correctamente', str(client_id)).encode('UTF-8')
         else:

@@ -197,6 +197,10 @@ def display_horario(res):
     os.system('clear')
     data = eval(res[12:])
     horarios = [horario for horario in data if horario[1]]
+
+    if len(horarios) == 0:
+        f_print('No se encontraron horarios')
+        return
   
     columnas = ['id', "dia de semana", 'hora de apertura', 'hora de cierre', 'es feriado']
 
@@ -382,6 +386,12 @@ if __name__ == '__main__':
                 'id':'serv10',
                 'desc': 'Ver Horario',
                 'function': display_horario,
+                'inputs': [
+                    {
+                        'key': 'dia_semana',
+                        'desc': 'Dia de la semana o vacío para consultar por todos: '
+                    }
+                ]
             },
             {
                 'id':'serv9',
