@@ -77,8 +77,8 @@ if status == 'OK':
         print(received_message)
         client_id = received_message[5:10]
         data = eval(received_message[10:])
-        # Llamar a la función crear_horario con los datos proporcionados
-        exito = editar_horario(data['hora_apertura'], data['hora_cierre'], data['es_feriado'])
+        # Llamar a la función editar_horario con los datos proporcionados
+        exito = editar_horario(data['dia_semana'], data['hora_apertura'], data['hora_cierre'], data['es_feriado'])
         if exito:
             response = utils.str_bus_format('Horario creado correctamente', str(client_id)).encode('UTF-8')
         else:
