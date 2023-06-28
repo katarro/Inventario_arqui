@@ -408,6 +408,7 @@ if __name__ == '__main__':
             {
                 'id':'serv10',
                 'desc': 'Ver Horario',
+                'user_types': [0, 1, 2],
                 'function': display_horario,
                 'inputs': [
                     {
@@ -415,7 +416,7 @@ if __name__ == '__main__':
                         'desc': 'Dia de la semana o vacío para consultar por todos: '
                     }
                 ]
-            },
+            }
         ]
     )
     res = app.show_menu()
