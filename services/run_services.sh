@@ -8,5 +8,4 @@ python3 serv5.py & \
 python3 serv6.py & \
 python3 serv7.py & \
 python3 serv8.py & \
-python3 serv9.py & \
-python3 servh.py
+python3 serv9.py 
