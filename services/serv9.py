@@ -62,12 +62,10 @@ def editar_horario(dia_semana, hora_apertura, hora_cierre, es_feriado=None):
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_address = ('localhost', 5000)
-
 sock.connect(server_address)
-
 message = b"00100sinitserv9"
-
 sock.send(message)
+
 status = sock.recv(4096)[10:12].decode('UTF-8')
 print(status)
 if status == 'OK':

@@ -76,7 +76,7 @@ class App:
 
             inputs[key] = value
 
-        res = self.send_message(inputs, self.login_service['id'])
+        res = self.send_message(inputs, self.login_service['id'])     
         return res
        
     def show_menu(self):
@@ -197,28 +197,22 @@ def display_juegos(res):
 def display_horario(res):
     os.system('clear')
     data = eval(res[12:])
-    horarios = [horario for horario in data if horario[1]]
-
-    if len(horarios) == 0:
-        f_print('No se encontraron horarios')
-        return
-  
-    columnas = ['id', "dia de semana", 'hora de apertura', 'hora de cierre', 'es feriado']
-
-    g_print('Horarios encontrados:')
-
-    for horario in horarios:
+    columnas = ['dia_semana', 'hora_apertura', 'hora_cierre', 'esferiado']
+    g_print('Horario:')
+    for horario in data:
         b_print('-' * 20)
         for columna in columnas:
             indice = columnas.index(columna) + 1
             valor = horario[indice]
-            if columna == 'es feriado':
+            if columna == 'esferiado':
                 if valor:
                     valor = '\033[92m' + 'Es feriado' + '\033[0m'
                 else:
                     valor = '\033[91m' + 'No es feriado' + '\033[0m'
             print(f'{columna.capitalize()}: {valor}')
         print()
+
+    
 
 
 
@@ -405,7 +399,19 @@ if __name__ == '__main__':
                         'desc':'Es feriado [si][no]: '
                     }
                 ]
-            }
+            },
+            {
+                'id':'ser10',
+                'desc': 'Consultar Horario',
+                'user_types': [0, 1, 2],
+                'function': display_horario,
+                'inputs':[
+                    {
+                        'key':'dia_semana',
+                        'desc':'Dia de la semana: '
+                    }
+                ]
+            },
         ]
     )
     res = app.show_menu()
