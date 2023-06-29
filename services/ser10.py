@@ -1,7 +1,5 @@
 import socket
-import sys
 import utils
-import datetime
 import psycopg2
 
 def ver_horario(dia_semana):

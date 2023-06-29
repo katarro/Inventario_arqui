@@ -4,6 +4,8 @@ import socket
 import re
 import os
 import getpass
+import datetime
+
 # sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # server_address = ('localhost', 5000)
 # sock.connect(server_address)
@@ -202,13 +204,13 @@ def display_horario(res):
     for horario in data:
         b_print('-' * 20)
         for columna in columnas:
-            indice = columnas.index(columna) + 1
+            indice = columnas.index(columna)
             valor = horario[indice]
             if columna == 'esferiado':
                 if valor:
-                    valor = '\033[92m' + 'Es feriado' + '\033[0m'
+                    valor = '\033[91m' + 'Es feriado' + '\033[0m'
                 else:
-                    valor = '\033[91m' + 'No es feriado' + '\033[0m'
+                    valor = '\033[92m' + 'No es feriado' + '\033[0m'
             print(f'{columna.capitalize()}: {valor}')
         print()
 
@@ -309,6 +311,18 @@ if __name__ == '__main__':
                         'desc':'Nombre del juego que reservo: '
                     },
                 ]
+            },
+            {
+                'id':'ser10',
+                'desc': 'Consultar Horario',
+                'user_types': [0, 1, 2],
+                'function': display_horario,
+                'inputs':[
+                    {
+                        'key':'dia_semana',
+                        'desc':'Dia de la semana o vacio para consultar por todo el horario: '
+                    }
+                ]
             }
         ],
         admin_services=[
@@ -408,7 +422,7 @@ if __name__ == '__main__':
                 'inputs':[
                     {
                         'key':'dia_semana',
-                        'desc':'Dia de la semana: '
+                        'desc':'Dia de la semana o vacio para consultar por todo el horario: '
                     }
                 ]
             },
