@@ -324,6 +324,21 @@ if __name__ == '__main__':
                         'desc':'Disponible [si][no] o vacio para omitir: '
                     }
                 ]
+            },
+            {
+                'id':'serv9',
+                'desc': 'Crear Multa',
+                'function': lambda res: g_print('Se creo multa exitosamente') if eval(res[12:]) else f_print('No se pudo crear la multa'),
+                'inputs':[                    
+                    {
+                        'key':'nombre',
+                        'desc':'Nombre del alumno a multar: '
+                    },
+                    {
+                        'key':'apellido',
+                        'desc':'Apellido del alumno a multar: '
+                    },
+                ]
             }
         ]
     )
