@@ -10,4 +10,6 @@ python3 serv7.py & \
 python3 serv8.py & \
 python3 serv9.py & \
 python3 ser10.py & \
-python3 ser11.py 
+python3 ser11.py & \
+python3 ser12.py & \
+python3 ser13.py & \

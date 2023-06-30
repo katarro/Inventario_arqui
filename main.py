@@ -403,7 +403,7 @@ if __name__ == '__main__':
                 ]
             },
             {
-                'id':'serv9',
+                'id':'ser12',
                 'desc': 'Editar Horario',
                 'function': lambda res: g_print('Horario editado exitosamente') if eval(res[12:]) else f_print('No se pudo editar el horario'),
                 'inputs':[
@@ -437,6 +437,36 @@ if __name__ == '__main__':
                     }
                 ]
             },
+            {
+                'id':'serv9',
+                'desc': 'Modificar fecha de prestamo',
+                'function': lambda res: g_print('Fecha actualizada correctamente') if eval(res[12:]) else f_print('No se pudo actualizar la fecha'),
+                'inputs':[
+                    {
+                        'key':'id_prestamo',
+                        'desc':'ID del préstamo: '
+                    },
+                    {
+                        'key':'nueva_fecha',
+                        'desc':'Nueva fecha del préstamo en el formato DD/MM/YYYY: '
+                    }
+                ]
+            },
+            {
+                'id':'ser13',
+                'desc': 'Crear Multa',
+                'function': lambda res: g_print('Se creo multa exitosamente') if eval(res[12:]) else f_print('No se pudo crear la multa'),
+                'inputs':[                    
+                    {
+                        'key':'nombre',
+                        'desc':'Nombre del alumno a multar: '
+                    },
+                    {
+                        'key':'apellido',
+                        'desc':'Apellido del alumno a multar: '
+                    },
+                ]
+            }
         ]
     )
     res = app.show_menu()
