@@ -10,7 +10,7 @@ def agregar_multa(nombre, apellido):
     except Exception as e:
         print(f"Error al conectarse a la base de datos: {e}")
         return False
-
+    
     try:
         c   = conn.cursor()
         if not nombre or not apellido: raise ValueError("Porfavor especifique un nombre y apellido de alumno.")
@@ -22,7 +22,7 @@ def agregar_multa(nombre, apellido):
         if idusuario is not None:
             now = datetime.datetime.now()
             fechamulta = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, now.second)
-
+            
             #crear multa
             c.execute('''INSERT INTO multas (idusuario, fechamulta, baneotemporal) VALUES( %s, %s, %s)''',(idusuario[0], fechamulta, True,))
             conn.commit()
@@ -31,7 +31,7 @@ def agregar_multa(nombre, apellido):
         else:
             conn.close()
             return False
-
+        
     except psycopg2.DatabaseError as e:
         print(f"Error en la consulta SQL: {e}")
         return False
@@ -48,7 +48,7 @@ server_address = ('localhost', 5000)
 
 sock.connect(server_address)
 
-message = b"00100sinitserv13"
+message = b"00100sinitserv10"
 
 sock.send(message)
 status = sock.recv(4096)[10:12].decode('UTF-8')
@@ -63,3 +63,4 @@ if (status == 'OK'):
         ans = agregar_multa(nombre=data['nombre'], apellido=data['apellido'])
         response = utils.str_bus_format(ans, str(client_id)).encode('UTF-8')
         sock.send(response)
+

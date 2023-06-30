@@ -453,7 +453,7 @@ if __name__ == '__main__':
                 ]
             },
             {
-                'id':'ser13',
+                'id':'ser14',
                 'desc': 'Crear Multa',
                 'function': lambda res: g_print('Se creo multa exitosamente') if eval(res[12:]) else f_print('No se pudo crear la multa'),
                 'inputs':[                    
