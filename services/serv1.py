@@ -29,7 +29,7 @@ def login(correo, contrasena):
 
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_address = ('200.14.84.16', 5000)
+server_address = ('localhost', 5000)
 
 sock.connect(server_address)
 
