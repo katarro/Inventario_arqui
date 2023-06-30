@@ -214,6 +214,25 @@ def display_horario(res):
             print(f'{columna.capitalize()}: {valor}')
         print()
 
+def display_multas(res):
+    os.system('clear')
+    data = eval(res[12:])
+    usuarios = [usuario for usuario in data]
+    
+    if len(usuarios) == 0:
+        f_print('No se encontraron multas')
+        return
+    
+    columnas = ['nombre', 'apellido']
+    
+    g_print('Multas:')
+    
+    for usuario in usuarios:
+        #b_print('-' * 20)
+        for i in usuario:
+            print(i,' ')
+        print('\n')
+
 if __name__ == '__main__':
 
 
@@ -455,16 +474,13 @@ if __name__ == '__main__':
             {
                 'id':'ser14',
                 'desc': 'Crear Multa',
-                'function': lambda res: g_print('Se creo multa exitosamente') if eval(res[12:]) else f_print('No se pudo crear la multa'),
-                'inputs':[                    
+                'user_types': [0, 1, 2],
+                'function': display_multas,
+                'inputs': [
                     {
-                        'key':'nombre',
-                        'desc':'Nombre del alumno a multar: '
-                    },
-                    {
-                        'key':'apellido',
-                        'desc':'Apellido del alumno a multar: '
-                    },
+                        'key': 'id',
+                        'desc': 'vacío para consultar por todos: '
+                    }
                 ]
             }
         ]

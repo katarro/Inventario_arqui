@@ -4,7 +4,7 @@ import utils
 import datetime
 from utils import get_db_connection
 
-def agregar_multa(nombre, apellido):
+def agregar_multa():
     try:
         conn = get_db_connection()
     except Exception as e:
@@ -13,21 +13,20 @@ def agregar_multa(nombre, apellido):
     
     try:
         c   = conn.cursor()
-        if not nombre or not apellido: raise ValueError("Porfavor especifique un nombre y apellido de alumno.")
-        #Id del alumno
-        c.execute('''SELECT idusuario FROM usuarios WHERE nombre = %s AND apellido =%s''',(nombre,apellido))
+        #Chequear todas las fechas
+        c.execute('''SELECT idusuario FROM reservas WHERE fechareserva > CURRENT_DATE;''')
         conn.commit()
-        idusuario = c.fetchone()
-
-        if idusuario is not None:
-            now = datetime.datetime.now()
-            fechamulta = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, now.second)
-            
+        idreservas = c.fetchall()
+        print(idreservas)
+        
+        if idreservas is not None:
             #crear multa
-            c.execute('''INSERT INTO multas (idusuario, fechamulta, baneotemporal) VALUES( %s, %s, %s)''',(idusuario[0], fechamulta, True,))
+            c.execute('''SELECT nombre , apellido FROM usuarios WHERE idusuario IN (SELECT UNNEST(%s))''',(idreservas,))
             conn.commit()
+            usuarios = c.fetchall()
+            print(usuarios)
             conn.close()
-            return True
+            return usuarios
         else:
             conn.close()
             return False
@@ -48,7 +47,7 @@ server_address = ('localhost', 5000)
 
 sock.connect(server_address)
 
-message = b"00100sinitserv10"
+message = b"00100sinitser14"
 
 sock.send(message)
 status = sock.recv(4096)[10:12].decode('UTF-8')
@@ -60,7 +59,8 @@ if (status == 'OK'):
         print(received_message)
         client_id = received_message[5:10]
         data = eval(received_message[10:])
-        ans = agregar_multa(nombre=data['nombre'], apellido=data['apellido'])
-        response = utils.str_bus_format(ans, str(client_id)).encode('UTF-8')
+        ans = agregar_multa(data['id'])
+        response = utils.str_bus_format( ans,str(client_id)).encode('UTF-8')
         sock.send(response)
+
 
