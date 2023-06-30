@@ -214,10 +214,6 @@ def display_horario(res):
             print(f'{columna.capitalize()}: {valor}')
         print()
 
-    
-
-
-
 if __name__ == '__main__':
 
 
@@ -323,7 +319,22 @@ if __name__ == '__main__':
                         'desc':'Dia de la semana o vacio para consultar por todo el horario: '
                     }
                 ]
-            }
+            },
+            {
+                'id':'ser11',
+                'desc': 'Editar nombre de la Reserva',
+                'function': lambda res: g_print('Nombre de la reserva editada exitosamente') if eval(res[12:]) else f_print('No se pudo editar el nombre de la reserva'),
+                'inputs':[
+                    {
+                        'key':'id',
+                        'desc':'Nombre del juego que reservo: '
+                    },
+                    {
+                        'key':'nombre_usuario',
+                        'desc':'Nuevo usuario a reservar: '
+                    },
+                ]
+            },
         ],
         admin_services=[
             {

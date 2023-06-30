@@ -22,6 +22,11 @@ def reservar_juego(titulo):
         c   = conn.cursor()
         if not titulo: raise ValueError("El título es requerido.")
         
+        #Obtiene el nombre del usuario por su id
+        c.execute('''SELECT nombre FROM usuarios WHERE idusuario = %s ''',(id_user,))
+        conn.commit()
+        nombre = c.fetchone()
+
         c.execute('''SELECT idjuego, disponibilidad FROM juegos WHERE titulo = %s ''',(titulo,))
         conn.commit()
         juego = c.fetchone()
@@ -33,7 +38,7 @@ def reservar_juego(titulo):
             now = datetime.datetime.now()
             fechaReserva = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, now.second)
 
-            c.execute('''INSERT INTO reservas (idusuario, idjuego, fechareserva) VALUES (%s, %s, %s)''', (id_user, juego[0], fechaReserva) )
+            c.execute('''INSERT INTO reservas (idusuario, idjuego, fechareserva, nombreusuario) VALUES (%s, %s, %s, %s)''', (id_user, juego[0], fechaReserva, nombre[0]) )
             conn.commit()
             conn.close()
             return True
