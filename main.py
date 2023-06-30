@@ -353,6 +353,21 @@ if __name__ == '__main__':
                     }
                 ]
             },
+            {
+                'id':'serv9',
+                'desc': 'Modificar fecha de prestamo',
+                'function': lambda res: g_print('Fecha actualizada correctamente') if eval(res[12:]) else f_print('No se pudo actualizar la fecha'),
+                'inputs':[
+                    {
+                        'key':'id_prestamo',
+                        'desc':'ID del préstamo: '
+                    },
+                    {
+                        'key':'nueva_fecha',
+                        'desc':'Nueva fecha del préstamo: '
+                    }
+                ]
+            },
         ]
     )
     res = app.show_menu()
