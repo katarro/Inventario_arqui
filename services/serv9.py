@@ -1,3 +1,4 @@
+import psycopg2
 from utils import get_db_connection
 import socket
 import utils
