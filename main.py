@@ -364,7 +364,7 @@ if __name__ == '__main__':
                     },
                     {
                         'key':'nueva_fecha',
-                        'desc':'Nueva fecha del préstamo: '
+                        'desc':'Nueva fecha del préstamo en el formato DD/MM/YYYY: '
                     }
                 ]
             },
