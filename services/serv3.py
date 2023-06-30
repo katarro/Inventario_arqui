@@ -21,12 +21,10 @@ def view_catalog(titulo):
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_address = ('200.14.84.16', 5000)
-
 sock.connect(server_address)
-
 message = b"00050sinitserv3"
-
 sock.send(message)
+
 status = sock.recv(4096)[10:12].decode('UTF-8')
 print(status, end=" ")
 if (status == 'OK'):

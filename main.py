@@ -4,6 +4,8 @@ import socket
 import re
 import os
 import getpass
+import datetime
+
 # sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # server_address = ('localhost', 5000)
 # sock.connect(server_address)
@@ -76,7 +78,7 @@ class App:
 
             inputs[key] = value
 
-        res = self.send_message(inputs, self.login_service['id'])
+        res = self.send_message(inputs, self.login_service['id'])     
         return res
        
     def show_menu(self):
@@ -157,6 +159,7 @@ class App:
                     key = actual_input['key']
                     inputs[key] = input(actual_input['desc'])
                 res = self.send_message(inputs, service['id']) # Dirige al servicio correspondiente
+                print(res)
                 if res[10:12] == 'NK':
                     f_print('Servicio no disponible')
                     pass
@@ -189,6 +192,25 @@ def display_juegos(res):
                     valor = '\033[92m' + 'Disponible' + '\033[0m'  # Color verde
                 else:
                     valor = '\033[91m' + 'No disponible' + '\033[0m'  # Color rojo
+            print(f'{columna.capitalize()}: {valor}')
+        print()
+
+#imprime el horario
+def display_horario(res):
+    os.system('clear')
+    data = eval(res[12:])
+    columnas = ['dia_semana', 'hora_apertura', 'hora_cierre', 'esferiado']
+    g_print('Horario:')
+    for horario in data:
+        b_print('-' * 20)
+        for columna in columnas:
+            indice = columnas.index(columna)
+            valor = horario[indice]
+            if columna == 'esferiado':
+                if valor:
+                    valor = '\033[91m' + 'Es feriado' + '\033[0m'
+                else:
+                    valor = '\033[92m' + 'No es feriado' + '\033[0m'
             print(f'{columna.capitalize()}: {valor}')
         print()
 
@@ -285,7 +307,34 @@ if __name__ == '__main__':
                         'desc':'Nombre del juego que reservo: '
                     },
                 ]
-            }
+            },
+            {
+                'id':'ser10',
+                'desc': 'Consultar Horario',
+                'user_types': [0, 1, 2],
+                'function': display_horario,
+                'inputs':[
+                    {
+                        'key':'dia_semana',
+                        'desc':'Dia de la semana o vacio para consultar por todo el horario: '
+                    }
+                ]
+            },
+            {
+                'id':'ser11',
+                'desc': 'Editar nombre de la Reserva',
+                'function': lambda res: g_print('Nombre de la reserva editada exitosamente') if eval(res[12:]) else f_print('No se pudo editar el nombre de la reserva'),
+                'inputs':[
+                    {
+                        'key':'id',
+                        'desc':'Nombre del juego que reservo: '
+                    },
+                    {
+                        'key':'nombre_usuario',
+                        'desc':'Nuevo usuario a reservar: '
+                    },
+                ]
+            },
         ],
         admin_services=[
             {
@@ -353,6 +402,71 @@ if __name__ == '__main__':
                     }
                 ]
             },
+            {
+                'id':'ser12',
+                'desc': 'Editar Horario',
+                'function': lambda res: g_print('Horario editado exitosamente') if eval(res[12:]) else f_print('No se pudo editar el horario'),
+                'inputs':[
+                    {
+                        'key':'dia_semana',
+                        'desc':'Dia de la semana: '
+                    },
+                    {
+                        'key':'hora_apertura',
+                        'desc':'Horario de apertura: '
+                    },
+                    {
+                        'key':'hora_cierre',
+                        'desc':'Horario de cierre: '
+                    },
+                    {
+                        'key':'es_feriado',
+                        'desc':'Es feriado [si][no]: '
+                    }
+                ]
+            },
+            {
+                'id':'ser10',
+                'desc': 'Consultar Horario',
+                'user_types': [0, 1, 2],
+                'function': display_horario,
+                'inputs':[
+                    {
+                        'key':'dia_semana',
+                        'desc':'Dia de la semana o vacio para consultar por todo el horario: '
+                    }
+                ]
+            },
+            {
+                'id':'serv9',
+                'desc': 'Modificar fecha de prestamo',
+                'function': lambda res: g_print('Fecha actualizada correctamente') if eval(res[12:]) else f_print('No se pudo actualizar la fecha'),
+                'inputs':[
+                    {
+                        'key':'id_prestamo',
+                        'desc':'ID del préstamo: '
+                    },
+                    {
+                        'key':'nueva_fecha',
+                        'desc':'Nueva fecha del préstamo en el formato DD/MM/YYYY: '
+                    }
+                ]
+            },
+            {
+                'id':'ser13',
+                'desc': 'Crear Multa',
+                'function': lambda res: g_print('Se creo multa exitosamente') if eval(res[12:]) else f_print('No se pudo crear la multa'),
+                'inputs':[                    
+                    {
+                        'key':'nombre',
+                        'desc':'Nombre del alumno a multar: '
+                    },
+                    {
+                        'key':'apellido',
+                        'desc':'Apellido del alumno a multar: '
+                    },
+                ]
+            }
         ]
     )
     res = app.show_menu()
