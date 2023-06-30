@@ -48,7 +48,7 @@ server_address = ('localhost', 5000)
 
 sock.connect(server_address)
 
-message = b"00100sinitserv10"
+message = b"00100sinitserv14"
 
 sock.send(message)
 status = sock.recv(4096)[10:12].decode('UTF-8')
