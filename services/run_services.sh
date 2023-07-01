@@ -13,5 +13,4 @@ python3 ser10.py & \
 python3 ser11.py & \
 python3 ser12.py & \
 python3 ser13.py & \
-python3 ser14.py & \
 

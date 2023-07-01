@@ -21,9 +21,9 @@ def editar_juego(titulo, nuevo_titulo='', nueva_descripcion='', nueva_disponibil
             return False
 
         campos_a_actualizar = []
-        if nuevo_titulo:
+        if nuevo_titulo is not "":
             campos_a_actualizar.append(f"titulo = '{nuevo_titulo}'")
-        if nueva_descripcion:
+        if nueva_descripcion is not "":
             campos_a_actualizar.append(f"descripcion = '{nueva_descripcion}'")
         if nueva_disponibilidad is not None:
             

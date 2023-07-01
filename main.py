@@ -277,8 +277,12 @@ if __name__ == '__main__':
                 'function' : lambda res: g_print('Juego Rervado exitosamente') if eval(res[12:]) else f_print('No se pudo Rservar el juego :( '),
                 'inputs':[
                     {
-                        'key': 'id',
+                        'key' : 'id',
                         'desc': 'Nombre del juego que desea Reservar: '
+                    },
+                    {
+                        'key'  : 'nombre',
+                        'desc' : 'Tu nombre de usuario: ' 
                     }
                 ]
             },
@@ -453,7 +457,7 @@ if __name__ == '__main__':
                 ]
             },
             {
-                'id':'ser14',
+                'id':'ser13',
                 'desc': 'Crear Multa',
                 'function': lambda res: g_print('Se creo multa exitosamente') if eval(res[12:]) else f_print('No se pudo crear la multa'),
                 'inputs':[                    
