@@ -13,17 +13,17 @@ def agregar_multa(id):
     try:
         c   = conn.cursor()
         #Chequear todas las fechas
-        c.execute('''SELECT DISTINCT idusuario FROM reservas WHERE fechareserva > CURRENT_DATE''')
+        c.execute('''SELECT DISTINCT idusuario FROM reservas WHERE fechareserva < CURRENT_DATE''')
         conn.commit()
         idusuarios = c.fetchall()
-        
+        print(idusuarios)
         if idusuarios is not None:
             #crear multa
-            c.execute('''SELECT nombre , apellido FROM usuarios WHERE idusuario IN (SELECT UNNEST(%s))''',(idusuarios))
+            c.execute('''SELECT nombre , apellido FROM usuarios WHERE idusuario IN (SELECT UNNEST(%s))''',(idusuarios,))
             conn.commit()
             usuarios = c.fetchall()
             conn.close()
-            return usuarios
+            print(usuarios)
             return usuarios
         else:
             conn.close()
@@ -46,7 +46,6 @@ server_address = ('localhost', 5000)
 sock.connect(server_address)
 
 message = b"00100sinitser14"
-message = b"00100sinitser14"
 
 sock.send(message)
 status = sock.recv(4096)[10:12].decode('UTF-8')
@@ -58,7 +57,7 @@ if (status == 'OK'):
         print(received_message)
         client_id = received_message[5:10]
         data = eval(received_message[10:])
-        ans = agregar_multa(nombre=data['nombre'], apellido=data['apellido'])
+        ans = agregar_multa(data['id'])
         response = utils.str_bus_format(ans, str(client_id)).encode('UTF-8')
         sock.send(response)
 
