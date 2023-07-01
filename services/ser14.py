@@ -1,10 +1,9 @@
 import socket
 import psycopg2
 import utils
-import datetime
 from utils import get_db_connection
 
-def agregar_multa():
+def agregar_multa(id):
     try:
         conn = get_db_connection()
     except Exception as e:
@@ -14,17 +13,15 @@ def agregar_multa():
     try:
         c   = conn.cursor()
         #Chequear todas las fechas
-        c.execute('''SELECT idusuario FROM reservas WHERE fechareserva > CURRENT_DATE;''')
+        c.execute('''SELECT DISTINCT idusuario FROM reservas WHERE fechareserva > CURRENT_DATE''')
         conn.commit()
-        idreservas = c.fetchall()
-        print(idreservas)
+        idusuarios = c.fetchall()
         
-        if idreservas is not None:
+        if idusuarios is not None:
             #crear multa
-            c.execute('''SELECT nombre , apellido FROM usuarios WHERE idusuario IN (SELECT UNNEST(%s))''',(idreservas,))
+            c.execute('''SELECT nombre , apellido FROM usuarios WHERE idusuario IN (SELECT UNNEST(%s))''',(idusuarios))
             conn.commit()
             usuarios = c.fetchall()
-            print(usuarios)
             conn.close()
             return usuarios
         else:
@@ -47,7 +44,7 @@ server_address = ('localhost', 5000)
 
 sock.connect(server_address)
 
-message = b"00100sinitserv14"
+message = b"00100sinitser14"
 
 sock.send(message)
 status = sock.recv(4096)[10:12].decode('UTF-8')
