@@ -2,6 +2,15 @@ import socket
 import utils
 import datetime
 import psycopg2
+import re
+
+def validar(tiempo):
+    patron = r'^([01]\d|2[0-3]):([0-5]\d)$'
+    coincidencia = re.match(patron, tiempo)
+    if coincidencia:
+        return True
+    else:
+        return False
 
 def editar_horario(dia_semana, hora_apertura, hora_cierre, es_feriado=None):
     # dia_semana: (Lunes-Domingo)
@@ -15,30 +24,36 @@ def editar_horario(dia_semana, hora_apertura, hora_cierre, es_feriado=None):
         return False     
 
     try:
+        dia=str(dia_semana).lower()
+        print(dia_semana)
         c = conn.cursor()
         # Obtener id del horario
-        c.execute('''SELECT idhorario FROM horarios WHERE diasemana = %s''', (dia_semana,))
-        id_horario = c.fetchone()[0]
+        horario = c.execute('''SELECT idhorario FROM horarios WHERE diasemana = %s''', (dia))
+        if horario:
+            id_horario = horario[0]
+            campos_a_actualizar = []
+            if hora_apertura and validar(hora_apertura):
+                campos_a_actualizar.append(f"horaapertura = '{hora_apertura}'")
+            else:
+                print("debe proporcionar una hora en formato HH:MM")
+            if hora_cierre and validar(hora_cierre):
+                campos_a_actualizar.append(f"horacierre = '{hora_cierre}'")
+            else:
+                print("debe proporcionar una hora en formato HH:MM")
+            if es_feriado is not None:
+                if es_feriado == 'no' or es_feriado == 'No':
+                    es_feriado = False
+                    campos_a_actualizar.append(f"esferiado = {es_feriado}")
 
-        campos_a_actualizar = []
-        
-        if hora_apertura:
-            campos_a_actualizar.append(f"horaapertura = '{hora_apertura}'")
-        if hora_cierre:
-            campos_a_actualizar.append(f"horacierre = '{hora_cierre}'")
-        if es_feriado is not None:
-            
-            if es_feriado == 'no' or es_feriado == 'No':
-                es_feriado = False
-                campos_a_actualizar.append(f"esferiado = {es_feriado}")
+                if es_feriado == 'si' or es_feriado == 'Si':
+                    es_feriado = True
+                    campos_a_actualizar.append(f"esferiado = {es_feriado}")
 
-            if es_feriado == 'si' or es_feriado == 'Si':
-                es_feriado = True
-                campos_a_actualizar.append(f"esferiado = {es_feriado}")
-        
-        if not campos_a_actualizar:
-            print("No se proporcionaron campos para actualizar.")
-            return False
+            if not campos_a_actualizar:
+                print("No se proporcionaron campos para actualizar.")
+                return False
+        else:
+            print("se debe proporcionar un día de la semana en el siguiente formato: lunes, martes, miercoles, jueves, viernes, sabado, domingo")
         
         consulta_sql = f"UPDATE horarios SET {', '.join(campos_a_actualizar)} WHERE idhorario = {id_horario};"
         print(consulta_sql)
