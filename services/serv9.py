@@ -9,7 +9,7 @@ def leer_variable(nombre_archivo):
         variable = f.read()
     return int(variable) 
 
-def gestion_fecha_prestamos( id_prestamo, nueva_fecha):
+def gestion_fecha_prestamos( nombre_juego, nueva_fecha):
     id_user = leer_variable('mi_variable.txt')
 
     try:
@@ -18,37 +18,37 @@ def gestion_fecha_prestamos( id_prestamo, nueva_fecha):
         print(f"Error al conectarse a la base de datos: {e}")
         return False
     try:
-        nueva_fecha = datetime.datetime.strptime(nueva_fecha, "%d/%m/%Y")
+        nueva_fecha = datetime.datetime.strptime(nueva_fecha, "%Y-%m-%d").date()
     except ValueError:
-        print("Formato de fecha no válida, por favor ingresarla en el formato DD/MM/YYYY")
+        print("Formato de fecha no válida, por favor ingresarla en el formato DD-MM-YYYY")
         return False
     try:
+        #return nueva_fecha
         c   = conn.cursor()
-        if not id_prestamo or not nueva_fecha: raise ValueError("El título del juego reservado o/y la fecha nueva de reserva son necesarios.")
-        #obtiene el prestamo
-        c.execute('''SELECT id FROM reservas WHERE  id = %s ''',(id_prestamo,))
+        if not nombre_juego or not nueva_fecha: raise ValueError("El título del juego reservado o/y la fecha nueva de reserva son necesarios.")
+        #obtiene el ID del juego
+        c.execute('''SELECT idjuego FROM juegos WHERE titulo = %s ''',(nombre_juego,))
         conn.commit()
-        prestamo = c.fetchone()
+        juego = c.fetchone()
 
-        if prestamo is not None: 
-            #Obtener id de fechas prestamos
-            c.execute('''SELECT id fecha FROM fechasPrestamos WHERE idreserva = %s ''',(prestamo[0]))
+        if juego is not None: 
+            #Obtener id del prestamo
+            c.execute('''SELECT idreserva FROM reservas WHERE idjuego = %s ''',(juego[0],))
             conn.commit()
-            fechas_prestamo = c.fetchone()
-
-            if fechas_prestamo: 
+            prestamo = c.fetchone()
+            if prestamo: 
                 #Update de la fecha de prestamo
-                c.execute('''UPDATE fechasPrestamos SET fechaprestamo = %s WHERE id = %s''', (fechas_prestamo[0],nueva_fecha) )
+                c.execute('''INSERT INTO "fechasprestamos" (idreserva, fechaprestamo) VALUES( %s, %s)''',(prestamo[0],nueva_fecha))
                 conn.commit()
                 conn.close()
                 return True
             else:
                 conn.close()
-                print(f"No hay ninguna fecha asociada a la reserva {prestamo[0]}")
+                print(f"No hay ninguna reserva asociada a la reserva del juego {nombre_juego}")
                 return False
         else:
             conn.close()
-            print(f"La reserva {prestamo[0]} no existe.")
+            print(f"el juego {nombre_juego} no existe.")
             return False
         
 
@@ -81,7 +81,7 @@ if (status == 'OK'):
         client_id = received_message[5:10]
         data = eval(received_message[10:])
         ans = gestion_fecha_prestamos(
-            id_prestamo=data['id_prestamo'],
+            nombre_juego=data['nombre_juego'],
             nueva_fecha=data['nueva_fecha']
         )
         response = utils.str_bus_format(ans, str(client_id)).encode('UTF-8')

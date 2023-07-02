@@ -159,7 +159,7 @@ class App:
                     key = actual_input['key']
                     inputs[key] = input(actual_input['desc'])
                 res = self.send_message(inputs, service['id']) # Dirige al servicio correspondiente
-                print(res)
+                print(res,res[10:12])
                 if res[10:12] == 'NK':
                     f_print('Servicio no disponible')
                     pass
@@ -213,6 +213,25 @@ def display_horario(res):
                     valor = '\033[92m' + 'No es feriado' + '\033[0m'
             print(f'{columna.capitalize()}: {valor}')
         print()
+
+def display_multas(res):
+    os.system('clear')
+    data = eval(res[12:])
+    usuarios = [usuario for usuario in data]
+    
+    if len(usuarios) == 0:
+        f_print('No se encontraron multas')
+        return
+    
+    columnas = ['nombre', 'apellido']
+    
+    g_print('Multas \n')
+    
+    for usuario in usuarios:
+        #b_print('-' * 20)
+        for i in usuario:
+            print(i,end=" ")
+        print('\n')
 
 if __name__ == '__main__':
 
@@ -413,15 +432,15 @@ if __name__ == '__main__':
                 'inputs':[
                     {
                         'key':'dia_semana',
-                        'desc':'Dia de la semana: '
+                        'desc':'Dia de la semana (en minusculas): '
                     },
                     {
                         'key':'hora_apertura',
-                        'desc':'Horario de apertura: '
+                        'desc':'Horario de apertura (formato HH:MM): '
                     },
                     {
                         'key':'hora_cierre',
-                        'desc':'Horario de cierre: '
+                        'desc':'Horario de cierre (formato HH:MM): '
                     },
                     {
                         'key':'es_feriado',
@@ -447,28 +466,25 @@ if __name__ == '__main__':
                 'function': lambda res: g_print('Fecha actualizada correctamente') if eval(res[12:]) else f_print('No se pudo actualizar la fecha'),
                 'inputs':[
                     {
-                        'key':'id_prestamo',
-                        'desc':'ID del préstamo: '
+                        'key':'nombre_juego',
+                        'desc':'nombre del juego: '
                     },
                     {
                         'key':'nueva_fecha',
-                        'desc':'Nueva fecha del préstamo en el formato DD/MM/YYYY: '
+                        'desc':'Nueva fecha del préstamo en el formato YYYY-MM-DD: '
                     }
                 ]
             },
             {
                 'id':'ser13',
                 'desc': 'Crear Multa',
-                'function': lambda res: g_print('Se creo multa exitosamente') if eval(res[12:]) else f_print('No se pudo crear la multa'),
-                'inputs':[                    
+                'user_types': [0, 1, 2],
+                'function': display_multas,
+                'inputs': [
                     {
-                        'key':'nombre',
-                        'desc':'Nombre del alumno a multar: '
-                    },
-                    {
-                        'key':'apellido',
-                        'desc':'Apellido del alumno a multar: '
-                    },
+                        'key': 'id',
+                        'desc': 'vacío para consultar por todos: '
+                    }
                 ]
             },
             {
