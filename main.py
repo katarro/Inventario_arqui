@@ -470,7 +470,22 @@ if __name__ == '__main__':
                         'desc':'Apellido del alumno a multar: '
                     },
                 ]
-            }
+            },
+            {
+                'id':'ser14',
+                'desc': 'Modificar fecha de devolucion',
+                'function': lambda res: g_print('Fecha actualizada correctamente') if eval(res[12:]) else f_print('No se pudo actualizar la fecha'),
+                'inputs':[
+                    {
+                        'key':'nombre_juego',
+                        'desc':'nombre del juego: '
+                    },
+                    {
+                        'key':'nueva_fecha',
+                        'desc':'Nueva fecha de devolución en el formato YYYY/MM/DD: '
+                    }
+                ]
+            },
         ]
     )
     res = app.show_menu()
