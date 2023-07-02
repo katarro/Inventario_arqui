@@ -11,15 +11,15 @@ def agregar_multa(id):
         return False
     
     try:
-        c   = conn.cursor()
-        #Chequear todas las fechas
+        c = conn.cursor()
+        # Chequear todas las fechas
         c.execute('''SELECT DISTINCT idusuario FROM reservas WHERE fechareserva < CURRENT_DATE''')
         conn.commit()
         idusuarios = c.fetchall()
         print(idusuarios)
         if idusuarios is not None:
-            #crear multa
-            c.execute('''SELECT nombre , apellido FROM usuarios WHERE idusuario IN (SELECT UNNEST(%s))''',(idusuarios,))
+            # Crear multa
+            c.execute('''SELECT nombre , apellido FROM usuarios WHERE idusuario IN (SELECT UNNEST(%s))''', (idusuarios,))
             conn.commit()
             usuarios = c.fetchall()
             conn.close()
@@ -38,7 +38,6 @@ def agregar_multa(id):
     except Exception as e:
         print(f"Error inesperado: {e}")
         return False
-
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_address = ('localhost', 5000)
@@ -60,5 +59,3 @@ if (status == 'OK'):
         ans = agregar_multa(data['id'])
         response = utils.str_bus_format(ans, str(client_id)).encode('UTF-8')
         sock.send(response)
-
-

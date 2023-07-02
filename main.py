@@ -296,8 +296,12 @@ if __name__ == '__main__':
                 'function' : lambda res: g_print('Juego Rervado exitosamente') if eval(res[12:]) else f_print('No se pudo Rservar el juego :( '),
                 'inputs':[
                     {
-                        'key': 'id',
+                        'key' : 'id',
                         'desc': 'Nombre del juego que desea Reservar: '
+                    },
+                    {
+                        'key'  : 'nombre',
+                        'desc' : 'Tu nombre de usuario: ' 
                     }
                 ]
             },
@@ -472,7 +476,7 @@ if __name__ == '__main__':
                 ]
             },
             {
-                'id':'ser14',
+                'id':'ser13',
                 'desc': 'Crear Multa',
                 'user_types': [0, 1, 2],
                 'function': display_multas,
@@ -482,7 +486,22 @@ if __name__ == '__main__':
                         'desc': 'vacío para consultar por todos: '
                     }
                 ]
-            }
+            },
+            {
+                'id':'ser14',
+                'desc': 'Modificar fecha de devolucion',
+                'function': lambda res: g_print('Fecha actualizada correctamente') if eval(res[12:]) else f_print('No se pudo actualizar la fecha'),
+                'inputs':[
+                    {
+                        'key':'nombre_juego',
+                        'desc':'nombre del juego: '
+                    },
+                    {
+                        'key':'nueva_fecha',
+                        'desc':'Nueva fecha de devolución en el formato YYYY/MM/DD: '
+                    }
+                ]
+            },
         ]
     )
     res = app.show_menu()

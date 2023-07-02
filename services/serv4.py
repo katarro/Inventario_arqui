@@ -4,13 +4,8 @@ import psycopg2
 import socket
 import utils
 
-def leer_variable(nombre_archivo):
-    with open(nombre_archivo, 'r') as f:
-        variable = f.read()
-    return int(variable) 
 
-def reservar_juego(titulo):
-    id_user = leer_variable('mi_variable.txt')
+def reservar_juego(titulo,nombre_usuario):
 
     try:
         conn = get_db_connection()
@@ -22,11 +17,12 @@ def reservar_juego(titulo):
         c   = conn.cursor()
         if not titulo: raise ValueError("El título es requerido.")
         
-        #Obtiene el nombre del usuario por su id
-        c.execute('''SELECT nombre FROM usuarios WHERE idusuario = %s ''',(id_user,))
+        #Obtiene el id del usuario
+        c.execute('''SELECT idusuario FROM usuarios WHERE nombre = %s ''',(nombre_usuario,))
         conn.commit()
-        nombre = c.fetchone()
+        id_user = c.fetchone()
 
+        # Obtiene el id del juego
         c.execute('''SELECT idjuego, disponibilidad FROM juegos WHERE titulo = %s ''',(titulo,))
         conn.commit()
         juego = c.fetchone()
@@ -38,8 +34,22 @@ def reservar_juego(titulo):
             now = datetime.datetime.now()
             fechaReserva = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, now.second)
 
-            c.execute('''INSERT INTO reservas (idusuario, idjuego, fechareserva, nombreusuario) VALUES (%s, %s, %s, %s)''', (id_user, juego[0], fechaReserva, nombre[0]) )
+            c.execute('''INSERT INTO reservas (idusuario, idjuego, fechareserva, nombreusuario) VALUES (%s, %s, %s, %s)''', (id_user, juego[0], fechaReserva, nombre_usuario) )
             conn.commit()
+
+            # Obtener el id de la reserva que acabamos de hacer
+            c.execute('''SELECT idreserva FROM reservas WHERE idusuario = %s AND idjuego = %s AND fechareserva = %s''', (id_user, juego[0], fechaReserva))
+            conn.commit()
+            idreserva = c.fetchone()
+
+            # Calcular la fecha de devolución (un día después de la fecha de reserva)
+            fechaDevolucion = fechaReserva + datetime.timedelta(days=1)
+
+            # Insertar la fecha de devolución en la tabla fechaDevolucion
+            c.execute('''INSERT INTO fechas_devolucion (idreserva, fechadevolucion) VALUES (%s, %s)''', (idreserva[0], fechaDevolucion))
+            conn.commit()
+            print(conn.commit())
+
             conn.close()
             return True
         
@@ -60,7 +70,6 @@ def reservar_juego(titulo):
 
 
 
-
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_address = ('localhost', 5000)
 sock.connect(server_address)
@@ -77,8 +86,9 @@ if (status == 'OK'):
         client_id = received_message[5:10]
         data = eval(received_message[10:])
         titulo_juego = data['id']
+        nombre_usuario = data['nombre']
 
-        ans = reservar_juego(titulo_juego)
+        ans = reservar_juego(titulo_juego,nombre_usuario)
         print('ans', ans)
         response = utils.str_bus_format(ans, str(client_id)).encode('UTF-8')
         sock.send(response)
