@@ -428,15 +428,15 @@ if __name__ == '__main__':
                 'inputs':[
                     {
                         'key':'dia_semana',
-                        'desc':'Dia de la semana: '
+                        'desc':'Dia de la semana (en minusculas): '
                     },
                     {
                         'key':'hora_apertura',
-                        'desc':'Horario de apertura: '
+                        'desc':'Horario de apertura (formato HH:MM): '
                     },
                     {
                         'key':'hora_cierre',
-                        'desc':'Horario de cierre: '
+                        'desc':'Horario de cierre (formato HH:MM): '
                     },
                     {
                         'key':'es_feriado',
