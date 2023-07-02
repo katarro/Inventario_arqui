@@ -19,7 +19,7 @@ def agregar_multa(nombre, apellido):
         conn.commit()
         idusuario = c.fetchone()
 
-        if idusuario is not None:
+        if idusuario != "":
             now = datetime.datetime.now()
             fechamulta = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, now.second)
             

@@ -225,12 +225,12 @@ def display_multas(res):
     
     columnas = ['nombre', 'apellido']
     
-    g_print('Multas:')
+    g_print('Multas \n')
     
     for usuario in usuarios:
         #b_print('-' * 20)
         for i in usuario:
-            print(i,' ')
+            print(i,end=" ")
         print('\n')
 
 if __name__ == '__main__':

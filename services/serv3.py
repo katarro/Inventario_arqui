@@ -20,7 +20,7 @@ def view_catalog(titulo):
     return rows
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_address = ('200.14.84.16', 5000)
+server_address = ('localhost', 5000)
 sock.connect(server_address)
 message = b"00050sinitserv3"
 sock.send(message)
