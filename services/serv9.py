@@ -27,24 +27,24 @@ def gestion_fecha_prestamos( nombre_juego, nueva_fecha):
         c   = conn.cursor()
         if not nombre_juego or not nueva_fecha: raise ValueError("El título del juego reservado o/y la fecha nueva de reserva son necesarios.")
         #obtiene el ID del juego
-        c.execute('''SELECT id FROM juegos WHERE titulo = %s ''',(nombre_juego))
+        c.execute('''SELECT idjuego FROM juegos WHERE titulo = %s ''',(nombre_juego,))
         conn.commit()
         juego = c.fetchone()
 
         if juego is not None: 
             #Obtener id del prestamo
-            c.execute('''SELECT id FROM reservas WHERE id = %s ''',(juego[0]))
+            c.execute('''SELECT idreserva FROM reservas WHERE idjuego = %s ''',(juego[0],))
             conn.commit()
             prestamo = c.fetchone()
             if prestamo: 
                 #Update de la fecha de prestamo
-                c.execute('''INSERT INTO fechasPrestamos (idreserva, fechaprestamo) VALUES( %s, %s)''',(prestamo[0],nueva_fecha))
+                c.execute('''INSERT INTO "fechasprestamos" (idreserva, fechaprestamo) VALUES( %s, %s)''',(prestamo[0],nueva_fecha))
                 conn.commit()
                 conn.close()
                 return True
             else:
                 conn.close()
-                print(f"No hay ninguna fecha asociada a la reserva del juego{nombre_juego}")
+                print(f"No hay ninguna reserva asociada a la reserva del juego {nombre_juego}")
                 return False
         else:
             conn.close()
